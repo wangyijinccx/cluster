@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ipeaksoft.moneyday.core.mapper.TaskAutoMapper" >
+  <resultMap id="BaseResultMap" type="com.ipeaksoft.moneyday.core.entity.TaskAuto" >
+    <id column="id" property="id" />
+    <result column="appid" property="appid" />
+    <result column="name" property="name" />
+    <result column="category" property="category" />
+    <result column="adid" property="adid" />
+    <result column="price" property="price" />
+    <result column="unit" property="unit" />
+    <result column="click_url" property="clickUrl" />
+    <result column="start_time" property="startTime" />
+    <result column="end_time" property="endTime" />
+    <result column="task_type" property="taskType" />
+    <result column="source" property="source" />
+    <result column="create_time" property="createTime" />
+    <result column="modify_time" property="modifyTime" />
+    <result column="appname" property="appname" />
+    <result column="icon" property="icon" />
+    <result column="daily_cap" property="dailyCap" />    
+    <result column="prize" property="prize" />
+    <result column="noprize" property="noprize" />
+    <result column="description" property="description" />
+    <result column="key_word" property="keyWord" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, appid, name, category, adid, price, unit, click_url, start_time, end_time, task_type, 
+    source, create_time, modify_time, appname, icon, daily_cap, prize, noprize, description,
+    key_word
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_task_auto
+    where id = #{id}
+  </select>
+  
+  <select id="selectByAdidAndSource" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_task_auto
+    where adid = #{adid} and source= #{source}
+  </select>
+  
+  <select id="selectByAdidsAndSource" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_task_auto
+    where adid in 
+    <foreach item="adid" index="index" collection="adids" open="(" separator="," close=")">
+		#{adid}
+	</foreach>
+	and source= #{source}
+	ORDER BY `appid`, `price` DESC
+  </select>
+  
+  <select id="selectALL" parameterType="string" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_task_auto
+  </select>
+  
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_task_auto
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.ipeaksoft.moneyday.core.entity.TaskAuto" >
+    insert into tb_task_auto (id, appid, name, 
+      category, adid, price, 
+      unit, click_url, start_time, 
+      end_time, task_type, source, 
+      create_time, appname, icon, daily_cap, prize, noprize, description,key_word)
+    values (#{id}, #{appid}, #{name}, 
+      #{category}, #{adid}, #{price}, 
+      #{unit}, #{clickUrl}, #{startTime}, 
+      #{endTime}, #{taskType}, #{source}, 
+      NOW(), #{appname}, #{icon}, #{dailyCap}, #{prize}, #{noprize}, #{description},#{keyWord})
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.ipeaksoft.moneyday.core.entity.TaskAuto" >
+    update tb_task_auto
+    <set >
+      <if test="appid != null" >
+        appid = #{appid},
+      </if>
+      <if test="name != null" >
+        name = #{name},
+      </if>
+      <if test="category != null" >
+        category = #{category},
+      </if>
+      <if test="adid != null" >
+        adid = #{adid},
+      </if>
+      <if test="price != null" >
+        price = #{price},
+      </if>
+      <if test="unit != null" >
+        unit = #{unit},
+      </if>
+      <if test="clickUrl != null" >
+        click_url = #{clickUrl},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime},
+      </if>
+      <if test="taskType != null" >
+        task_type = #{taskType},
+      </if>
+      <if test="source != null" >
+        source = #{source},
+      </if>
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime},
+      </if>
+      <if test="appname != null" >
+        appname = #{appname},
+      </if>
+      <if test="icon != null" >
+        icon = #{icon},
+      </if>
+      <if test="dailyCap != null" >
+        daily_cap = #{dailyCap},
+      </if>
+      <if test="prize != null" >
+        prize = #{prize},
+      </if>
+      <if test="noprize != null" >
+        noprize = #{noprize},
+      </if>
+      <if test="description != null" >
+        description = #{description},
+      </if>
+      key_word = #{keyWord}
+    </set>
+    where id = #{id}
+  </update>
+
+</mapper>

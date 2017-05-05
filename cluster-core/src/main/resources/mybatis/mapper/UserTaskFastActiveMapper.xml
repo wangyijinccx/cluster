@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ipeaksoft.moneyday.core.mapper.UserTaskFastActiveMapper">
+	<resultMap id="BaseResultMap"
+		type="com.ipeaksoft.moneyday.core.entity.UserTaskFastActive">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="idfa" property="idfa" jdbcType="VARCHAR" />
+		<result column="appid" property="appid" jdbcType="VARCHAR" />
+		<result column="ip" property="ip" jdbcType="VARCHAR" />
+		<result column="mobile" property="mobile" jdbcType="VARCHAR" />
+		<result column="task_id" property="taskId" jdbcType="BIGINT" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="status" property="status" jdbcType="CHAR" />
+		<result column="client_type" property="clientType" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, idfa, appid, ip, mobile, task_id, create_time, status,
+		client_type
+	</sql>
+	<select id="selectByIdfaAndTaskId" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tb_user_task_fast_active
+		where idfa = #{idfa} and task_id =
+		#{taskId} and client_type = #{clientType} ORDER BY create_time DESC
+		LIMIT 1
+	</select>
+	<select id="selectByMobileAndTaskId" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tb_user_task_fast_active
+		where mobile = #{mobile} and task_id =
+		#{taskId} and client_type = #{clientType} ORDER BY create_time DESC
+		LIMIT 1
+	</select>
+	<select id="selectByMobileAndAppid" parameterType="java.util.Map"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tb_user_task_fast_active
+		where mobile = #{mobile} and appid =
+		#{appid} and client_type = #{clientType} ORDER BY create_time DESC
+		LIMIT 1
+	</select>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from tb_user_task_fast_active
+		where id = #{id}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		tb_user_task_fast_active
+		where id = #{id}
+	</delete>
+	<insert id="insert"
+		parameterType="com.ipeaksoft.moneyday.core.entity.UserTaskFastActive">
+		<selectKey resultType="long" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID() AS id
+		</selectKey>
+		insert into tb_user_task_fast_active (id, idfa, appid,
+		ip, mobile,
+		task_id, create_time, status, client_type)
+		values (#{id}, #{idfa},
+		#{appid},
+		#{ip}, #{mobile}, #{taskId}, #{createTime}, #{status},
+		#{clientType})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.ipeaksoft.moneyday.core.entity.UserTaskFastActive">
+		insert into tb_user_task_fast_active
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="idfa != null">
+				idfa,
+			</if>
+			<if test="appid != null">
+				appid,
+			</if>
+			<if test="ip != null">
+				ip,
+			</if>
+			<if test="mobile != null">
+				mobile,
+			</if>
+			<if test="taskId != null">
+				task_id,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="clientType != null">
+				client_type,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="idfa != null">
+				#{idfa},
+			</if>
+			<if test="appid != null">
+				#{appid},
+			</if>
+			<if test="ip != null">
+				#{ip},
+			</if>
+			<if test="mobile != null">
+				#{mobile},
+			</if>
+			<if test="taskId != null">
+				#{taskId},
+			</if>
+			<if test="createTime != null">
+				#{createTime},
+			</if>
+			<if test="status != null">
+				#{status},
+			</if>
+			<if test="clientType != null">
+				#{clientType},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.ipeaksoft.moneyday.core.entity.UserTaskFastActive">
+		update tb_user_task_fast_active
+		<set>
+			<if test="idfa != null">
+				idfa = #{idfa},
+			</if>
+			<if test="appid != null">
+				appid = #{appid},
+			</if>
+			<if test="ip != null">
+				ip = #{ip},
+			</if>
+			<if test="mobile != null">
+				mobile = #{mobile},
+			</if>
+			<if test="taskId != null">
+				task_id = #{taskId},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime},
+			</if>
+			<if test="status != null">
+				status = #{status},
+			</if>
+			<if test="clientType != null">
+				client_type = #{clientType},
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.ipeaksoft.moneyday.core.entity.UserTaskFastActive">
+		update tb_user_task_fast_active
+		set idfa = #{idfa},
+		appid
+		= #{appid},
+		ip = #{ip},
+		mobile = #{mobile},
+		task_id = #{taskId},
+		create_time = #{createTime},
+		status = #{status},
+		client_type =
+		#{clientType}
+		where id = #{id}
+	</update>
+</mapper>

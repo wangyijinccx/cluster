@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ipeaksoft.moneyday.core.mapper.DeviceMapper" >
+  <resultMap id="BaseResultMap" type="com.ipeaksoft.moneyday.core.entity.Device" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="userid" property="userid" jdbcType="BIGINT" />
+    <result column="idfa" property="idfa" jdbcType="VARCHAR" />
+    <result column="model" property="model" jdbcType="VARCHAR" />
+    <result column="os" property="os" jdbcType="VARCHAR" />
+     <result column="version_desc" property="versionDesc" jdbcType="VARCHAR" />
+      <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="operator" property="operator" jdbcType="INTEGER" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+       <result column="os_version" property="osVersion" jdbcType="VARCHAR" />
+          <result column="app_version" property="appVersion" jdbcType="VARCHAR" />
+             <result column="client_type" property="clientType" jdbcType="VARCHAR" />
+    
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, userid, idfa, model, os,operator, modify_time,version_desc,url,os_version,app_version,client_type
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_device
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+     <select id="selectByIdfa" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_device
+    where idfa = #{idfa,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tb_device
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ipeaksoft.moneyday.core.entity.Device" >
+    insert into tb_device (id, userid, idfa, 
+      model, os, operator,version_desc,url, 
+      modify_time,os_version,app_version,client_type)
+    values (#{id,jdbcType=INTEGER}, #{userid,jdbcType=BIGINT}, #{idfa,jdbcType=VARCHAR}, 
+      #{model,jdbcType=VARCHAR}, #{os,jdbcType=VARCHAR}, #{operator,jdbcType=INTEGER},  #{versionDesc,jdbcType=INTEGER}, #{url,jdbcType=INTEGER},
+      #{modifyTime,jdbcType=TIMESTAMP}, #{osVersion,jdbcType=VARCHAR}, #{appVersion,jdbcType=VARCHAR}, #{clientType,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ipeaksoft.moneyday.core.entity.Device" >
+    insert into tb_device
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userid != null" >
+        userid,
+      </if>
+      <if test="idfa != null" >
+        idfa,
+      </if>
+      <if test="model != null" >
+        model,
+      </if>
+      <if test="os != null" >
+        os,
+      </if>
+      <if test="operator != null" >
+        operator,
+      </if>
+      <if test="modifyTime != null" >
+        modify_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userid != null" >
+        #{userid,jdbcType=BIGINT},
+      </if>
+      <if test="idfa != null" >
+        #{idfa,jdbcType=VARCHAR},
+      </if>
+      <if test="model != null" >
+        #{model,jdbcType=VARCHAR},
+      </if>
+      <if test="os != null" >
+        #{os,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=INTEGER},
+      </if>
+      <if test="modifyTime != null" >
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ipeaksoft.moneyday.core.entity.Device" >
+    update tb_device
+    <set >
+      <if test="userid != null" >
+        userid = #{userid,jdbcType=BIGINT},
+      </if>
+      <if test="idfa != null" >
+        idfa = #{idfa,jdbcType=VARCHAR},
+      </if>
+      <if test="model != null" >
+        model = #{model,jdbcType=VARCHAR},
+      </if>
+      <if test="os != null" >
+        os = #{os,jdbcType=VARCHAR},
+      </if>
+        <if test="versionDesc != null" >
+        version_desc = #{versionDesc,jdbcType=VARCHAR},
+      </if>
+        <if test="url != null" >
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null" >
+        operator = #{operator,jdbcType=INTEGER},
+      </if>
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ipeaksoft.moneyday.core.entity.Device" >
+    update tb_device
+    set userid = #{userid,jdbcType=BIGINT},
+      idfa = #{idfa,jdbcType=VARCHAR},
+      model = #{model,jdbcType=VARCHAR},
+      os = #{os,jdbcType=VARCHAR},
+      version_desc = #{versionDesc,jdbcType=VARCHAR},
+      url = #{url,jdbcType=VARCHAR},
+      operator = #{operator,jdbcType=INTEGER},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      os_version=#{osVersion,jdbcType=VARCHAR},app_version=#{appVersion,jdbcType=VARCHAR},client_type=#{clientType,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

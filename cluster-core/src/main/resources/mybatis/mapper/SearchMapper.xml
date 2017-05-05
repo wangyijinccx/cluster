@@ -1,0 +1,374 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ipeaksoft.moneyday.core.mapper.SearchMapper">
+	<resultMap id="UserSuveyMap" type="com.ipeaksoft.moneyday.core.entity.UserSurvey">
+		<result column="fromto" property="fromto" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="users" property="users" jdbcType="INTEGER" />
+		<result column="onlineB" property="onlineBUsers" jdbcType="INTEGER" />
+		<result column="onlineC" property="onlineCUsers" jdbcType="INTEGER" />
+		<result column="onlineD" property="onlineUsers" jdbcType="INTEGER" />
+		<result column="offlineA" property="offlineAUsers" jdbcType="INTEGER" />
+		<result column="offlineB" property="offlineBUsers" jdbcType="INTEGER" />
+		<result column="offlineC" property="offlineCUsers" jdbcType="INTEGER" />
+		<result column="offlineD" property="offlineUsers" jdbcType="INTEGER" />
+	</resultMap>
+
+	<resultMap id="UserSuveyDetailMap"
+		type="com.ipeaksoft.moneyday.core.entity.UserSurveyDetail">
+		<result column="date" property="date" />
+		<result column="newuser" property="newuser" />
+		<result column="visitor" property="visitor" />
+		<result column="alluser" property="alluser" />
+		<result column="visitortouser" property="visitortouser" />
+		<result column="pecent" property="pecent" />
+		<result column="ptzgj" property="ptzgj" />
+		<result column="ptzgjpecent" property="ptzgjpecent" />
+		<result column="loginactive" property="loginactive" />
+		<result column="downloadactive" property="downloadactive" />
+	</resultMap>
+
+	<resultMap id="TaskMap" type="java.util.Map">
+		<result column="create_time" property="create_time" />
+		<result column="times" property="times" />
+		<result column="fromto" property="fromto" />
+	</resultMap>
+	<resultMap type="com.ipeaksoft.moneyday.core.entity.TaskFastStatistics"
+		id="TaskFastStatisticsMap">
+		<result column="ts" property="date" />
+		<result column="ksrwwczcs" property="ksrwwczcs" />
+		<result column="cyrs" property="cyrs" />
+		<result column="xsyhc" property="xsyhc" />
+		<result column="xssyjb" property="xssyjb" />
+		<result column="xxyhc" property="xxyhc" />
+		<result column="xxsyjb" property="xxsyjb" />
+		<result column="drzsy" property="drzsy" />
+	</resultMap>
+	<select id="getUserSurvey" resultMap="UserSuveyMap"
+		parameterType="java.util.Map">
+		select
+		max(case t.type when 'onlineB' then t.num else 0
+		end) onlineB,
+		max(case t.type when 'onlineC' then t.num else 0 end)
+		onlineC,
+		max(case t.type when 'onlineD' then t.num else 0 end) onlineD,
+		max(case t.type when 'offlineA' then t.num else 0 end) offlineA,
+		max(case t.type when 'offlineB' then t.num else 0 end) offlineB,
+		max(case t.type when 'offlineC' then t.num else 0 end) offlineC,
+		max(case t.type when 'offlineD' then t.num else 0 end) offlineD
+		from (
+		select CONCAT(fromto,type) type ,count(*) as num from tb_user where
+		type
+		in('A','B','C','D') GROUP BY fromto,type
+		)t
+	</select>
+	<select id="findByWhereCount" resultType="Integer"
+		parameterType="java.util.Map">
+		select count(1) from (
+		select ts date,
+		max(case when dt='A' then xinzeng
+		else 0 end) newuser,
+		max(case when dt='A' then youke else 0 end)
+		visitor,
+		max(case when dt='B' then num else 0 end) alluser,
+		max(case
+		when dt='A' then youkezhuanzhuce else 0 end) visitortouser,
+		max(case
+		when dt='A' then zhuanhualv else 0 end) pecent,
+		max(case when dt='C'
+		then num else 0 end) ptzgj,
+		max(case when dt='D' then login else 0 end)
+		loginactive,
+		max(case when dt='D' then download else 0 end)
+		downloadactive
+		from (
+		select 'A' dt, ts,null num,count(1) xinzeng
+		,sum(noreg) youke ,sum(reg)
+		youkezhuanzhuce,sum(reg)*100/count(1)
+		zhuanhualv ,null login,null
+		download from (
+		select
+		tb_visitor_history.idfa,date_format(tb_visitor_history.ts,'%Y-%m-%d')
+		ts, case when tb_user.idfa is null then 0 else 1 end noreg, case when
+		tb_user.idfa is null then 1 else 0 end reg from tb_visitor_history
+		left join tb_user on tb_visitor_history.idfa=tb_user.idfa
+		) t group by
+		ts
+		union
+		select 'B' dt, ts,count(1) num,null xinzeng,null youke,null
+		youkezhuanzhuce,
+		null zhuanhualv ,null login,null download from (select
+		date_format(create_time,'%Y-%m-%d') ts from tb_user)t group by ts
+		union
+		select 'C' dt, ts,count(1) num,null xinzeng,null youke,null
+		youkezhuanzhuce,
+		null zhuanhualv,null login,null download from (select
+		date_format(create_time,'%Y-%m-%d') ts from tb_senior_user_record) t
+		group by ts
+		union
+		#登录 下载活跃
+		select 'D' dt, ts,null num,null xinzeng,null
+		youke,null youkezhuanzhuce,
+		null zhuanhualv,sum(login)
+		login,sum(download) download from (
+		select ts,case when action_type='1'
+		then num else 0 end login,
+		case when action_type='2' then num else 0
+		end download from (
+		select ts,action_type,count(1) num from (select
+		ts,action_type,userid from (
+		select date_format(create_time,'%Y-%m-%d')
+		ts,action_type,userid from
+		tb_user_action_history) t group by
+		ts,userid,action_type) t group by
+		ts,action_type) t
+		) t group by ts) t
+		where 1=1
+		<if test="startDate !=null ">
+		<![CDATA[  AND ts>= #{startDate} ]]>
+		</if>
+		<if test="endDate != null">
+		<![CDATA[  AND ts<=#{endDate} ]]>
+		</if>
+		group by ts)t
+
+	</select>
+	<select id="findByWhere" resultMap="UserSuveyDetailMap"
+		parameterType="java.util.Map">
+		select ts date,
+		max(case when dt='A' then xinzeng else 0 end) newuser,
+		max(case when dt='A' then youke else 0 end) visitor,
+		max(case when
+		dt='B' then num else 0 end) alluser,
+		max(case when dt='A' then
+		youkezhuanzhuce else 0 end) visitortouser,
+		max(case when dt='A' then
+		zhuanhualv else 0 end) pecent,
+		max(case when dt='C' then num else 0
+		end) ptzgj,
+		max(case when dt='D' then login else 0 end) loginactive,
+		max(case when dt='D' then download else 0 end) downloadactive
+		from (
+		select 'A' dt, ts,null num,count(1) xinzeng ,sum(noreg) youke
+		,sum(reg)
+		youkezhuanzhuce,sum(reg)*100/count(1) zhuanhualv ,null
+		login,null
+		download from (
+		select
+		tb_visitor_history.idfa,date_format(tb_visitor_history.ts,'%Y-%m-%d')
+		ts, case when tb_user.idfa is null then 0 else 1 end noreg, case when
+		tb_user.idfa is null then 1 else 0 end reg from tb_visitor_history
+		left join tb_user on tb_visitor_history.idfa=tb_user.idfa
+		) t group by
+		ts
+		union
+		select 'B' dt, ts,count(1) num,null xinzeng,null youke,null
+		youkezhuanzhuce,
+		null zhuanhualv ,null login,null download from (select
+		date_format(create_time,'%Y-%m-%d') ts from tb_user)t group by ts
+		union
+		select 'C' dt, ts,count(1) num,null xinzeng,null youke,null
+		youkezhuanzhuce,
+		null zhuanhualv,null login,null download from (select
+		date_format(create_time,'%Y-%m-%d') ts from tb_senior_user_record) t
+		group by ts
+		union
+		#登录 下载活跃
+		select 'D' dt, ts,null num,null xinzeng,null
+		youke,null youkezhuanzhuce,
+		null zhuanhualv,sum(login)
+		login,sum(download) download from (
+		select ts,case when action_type='1'
+		then num else 0 end login,
+		case when action_type='2' then num else 0
+		end download from (
+		select ts,action_type,count(1) num from (select
+		ts,action_type,userid from (
+		select date_format(create_time,'%Y-%m-%d')
+		ts,action_type,userid from
+		tb_user_action_history) t group by
+		ts,userid,action_type) t group by
+		ts,action_type) t
+		) t group by ts) t
+		where 1=1
+		<if test="startDate !=null ">
+		<![CDATA[  AND ts>= #{startDate} ]]>
+		</if>
+		<if test="endDate != null">
+		<![CDATA[  AND ts<=#{endDate} ]]>
+		</if>
+		group by ts
+		<if test="currentPage !=null and pageSize != null">
+		<![CDATA[  LIMIT #{currentPage,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER} ]]>
+		</if>
+	</select>
+
+	<!-- <select id="findFastTaskWithUid" resultMap="TaskMap" parameterType="java.util.Map" 
+		> select b.create_time as create_time,count(*) as times, b.fromto from tb_user_task_fast_click 
+		a LEFT JOIN tb_user b on a.userid=b.id GROUP BY b.fromto,a.create_time,b.id 
+		</select> -->
+	<select id="findFastTaskStatistics" resultMap="TaskFastStatisticsMap"
+		parameterType="java.util.Map">
+		select
+		A.ts,A.ksrwwczcs,A.cyrs,B.xsyhc,B.xssyjb,C.xxyhc,C.xxsyjb,A.drzsy from
+		(
+		#快速任务完成次数
+		select date_format(create_time,'%Y-%m-%d') ts, count(1)
+		ksrwwczcs,count(distinct userid) cyrs,sum(point) drzsy from
+		tb_user_task_fast_click group by date_format(create_time,'%Y-%m-%d')
+		)
+		A left join (
+		#线上
+		select
+		date_format(tb_user_task_fast_click.create_time,'%Y-%m-%d')
+		ts,count(1) xsyhc,sum(point) xssyjb from tb_user_task_fast_click left
+		join tb_user on tb_user_task_fast_click.userid=tb_user.id where
+		tb_user.fromto='online' group by
+		date_format(tb_user_task_fast_click.create_time,'%Y-%m-%d')
+		) B on
+		A.ts=B.ts
+		left join (
+		#线下
+		select
+		date_format(tb_user_task_fast_click.create_time,'%Y-%m-%d')
+		ts,count(1) xxyhc,sum(point) xxsyjb from tb_user_task_fast_click left
+		join tb_user on tb_user_task_fast_click.userid=tb_user.id where
+		tb_user.fromto='offline' group by
+		date_format(tb_user_task_fast_click.create_time,'%Y-%m-%d')
+		) C on
+		A.ts=C.ts where 1=1
+		<if test="startDate !=null ">
+		<![CDATA[  AND A.ts>= #{startDate} ]]>
+		</if>
+		<if test="endDate != null">
+		<![CDATA[  AND A.ts<=#{endDate} ]]>
+		</if>
+		order by A.ts asc
+		<if test="currentPage !=null and pageSize != null">
+		<![CDATA[  LIMIT #{currentPage,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER} ]]>
+		</if>
+	</select>
+	<select id="findFastTaskStatisticsCount" resultType="Integer"
+		parameterType="java.util.Map">
+		select count(1) from (
+		#快速任务完成次数
+		select
+		date_format(create_time,'%Y-%m-%d') ts, count(1)
+		ksrwwczcs,count(distinct userid) cyrs,sum(point) drzsy from
+		tb_user_task_fast_click group by date_format(create_time,'%Y-%m-%d')
+		)
+		A left join (
+		#线上
+		select
+		date_format(tb_user_task_fast_click.create_time,'%Y-%m-%d')
+		ts,count(1) xsyhc,sum(point) xssyjb from tb_user_task_fast_click left
+		join tb_user on tb_user_task_fast_click.userid=tb_user.id where
+		tb_user.fromto='online' group by
+		date_format(tb_user_task_fast_click.create_time,'%Y-%m-%d')
+		) B on
+		A.ts=B.ts
+		left join (
+		#线下
+		select
+		date_format(tb_user_task_fast_click.create_time,'%Y-%m-%d')
+		ts,count(1) xxyhc,sum(point) xxsyjb from tb_user_task_fast_click left
+		join tb_user on tb_user_task_fast_click.userid=tb_user.id where
+		tb_user.fromto='offline' group by
+		date_format(tb_user_task_fast_click.create_time,'%Y-%m-%d')
+		) C on
+		A.ts=C.ts where 1=1
+		<if test="startDate !=null ">
+		<![CDATA[  AND A.ts>= #{startDate} ]]>
+		</if>
+		<if test="endDate != null">
+		<![CDATA[  AND A.ts<=#{endDate} ]]>
+		</if>
+
+	</select>
+	<select id="getTaskFastIncome" resultType="Integer">
+		select sum(point) from
+		tb_user_task_fast_click
+	</select>
+
+	<!-- 业绩查询数据集 -->
+	<resultMap type="Long" id="total">
+		<result column="total" jdbcType="BIGINT" javaType="Long" />
+	</resultMap>
+
+	<!-- 不指定列名 -->
+	<resultMap type="java.util.Map" id="data"></resultMap>
+
+	<select id="getPerformance" statementType="CALLABLE" resultMap="total, data">
+		{ CALL sp_performance (
+		#{user_id,mode=IN,jdbcType=INTEGER},
+		#{start,mode=IN,jdbcType=INTEGER},
+		#{length,mode=IN,jdbcType=INTEGER},
+		#{start_date,mode=IN,jdbcType=VARCHAR},
+		#{end_date,mode=IN,jdbcType=VARCHAR})
+		}
+	</select>
+
+	<!-- 提现明细查询详细数据集 -->
+	<select id="getPerformanceBillItem" resultType="java.util.HashMap">
+		{ CALL
+		sp_performance_billitem (
+		#{user_id,mode=IN,jdbcType=INTEGER},
+		#{start_date,mode=IN,jdbcType=VARCHAR},
+		#{end_date,mode=IN,jdbcType=VARCHAR})
+		}
+	</select>
+
+	<!-- 任务明细查询详细数据集 -->
+	<select id="getPerformanceItem" resultType="java.util.HashMap">
+		{ CALL
+		sp_performance_item (
+		#{user_id,mode=IN,jdbcType=INTEGER},
+		#{start_date,mode=IN,jdbcType=VARCHAR},
+		#{end_date,mode=IN,jdbcType=VARCHAR})
+		}
+	</select>
+
+	<!-- 余额明细查询详细数据集 -->
+	<select id="getPerformanceMoneyItem" resultType="java.util.HashMap">
+		{ CALL
+		sp_performance_moneyitem (
+		#{user_id,mode=IN,jdbcType=INTEGER},
+		#{start_date,mode=IN,jdbcType=VARCHAR},
+		#{end_date,mode=IN,jdbcType=VARCHAR})
+		}
+	</select>
+
+	<!-- 广告主明细查询详细数据集 -->
+	<select id="getPerformanceChannelItem" resultType="java.util.HashMap">
+		{ CALL
+		sp_performance_channelitem (
+		#{user_id,mode=IN,jdbcType=INTEGER},
+		#{start_date,mode=IN,jdbcType=VARCHAR},
+		#{end_date,mode=IN,jdbcType=VARCHAR})
+		}
+	</select>
+
+	<!-- 渠道明细查询详细数据集 -->
+	<select id="getPerformanceChannel" resultType="java.util.HashMap">
+		SELECT
+		a.*,f.award,f.taskname,f.task_source,f.channel_name
+		FROM tb_user_task_fast_active a JOIN tb_task_fast f
+			ON a.task_id= f.id
+			AND f.task_type> 100  
+		<![CDATA[ AND a.create_time >= #{start } AND a.create_time <=  #{end } ]]>
+		ORDER BY a.task_id desc, a.create_time desc
+	</select>
+	
+	<!-- 渠道点击查询详细数据集 -->
+	<select id="getPerformanceChannelClick" resultType="java.util.HashMap">
+		SELECT
+		a.*,f.award,f.taskname,f.task_source,f.channel_name
+		FROM
+		tb_user_task_fast_click a JOIN tb_task_fast f
+		ON a.task_id= f.id
+		AND f.task_type> 100
+		<![CDATA[ AND a.create_time >= #{start } AND a.create_time <=  #{end } ]]>
+		ORDER BY a.task_id desc, a.create_time desc
+	</select>
+
+</mapper>

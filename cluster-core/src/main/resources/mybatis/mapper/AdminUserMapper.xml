@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ipeaksoft.moneyday.core.mapper.AdminUserMapper">
+	<resultMap id="BaseResultMap" type="com.ipeaksoft.moneyday.core.entity.AdminUser">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="username" property="username" jdbcType="VARCHAR" />
+		<result column="password" property="password" jdbcType="VARCHAR" />
+		<result column="company_name" property="companyName" jdbcType="VARCHAR" />
+		<result column="linkman" property="linkman" jdbcType="VARCHAR" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="comment" property="comment" jdbcType="VARCHAR" />
+		<result column="is_valid" property="isValid" jdbcType="INTEGER" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+		<result column="pid" property="pid" jdbcType="INTEGER" />
+		<result column="level" property="level" jdbcType="TINYINT" />
+		<collection column="id" property="userRoles" ofType="Role"
+			select="getRolesByUserId" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, username, password, company_name, linkman, phone, comment, is_valid,
+		create_time,
+		modify_time, pid, level
+	</sql>
+
+	<select id="getRolesByUserId"
+		resultMap="com.ipeaksoft.moneyday.core.mapper.RoleMapper.BaseResultMap"
+		parameterType="Integer">
+		select distinct tr.*
+		from tb_user_role tur, tb_role tr
+		where tur.user_id=#{id,jdbcType=INTEGER}
+		and tur.role_id=tr.id
+	</select>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from tb_admin_user
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectLevel3ByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from tb_admin_user
+		where id = #{id,jdbcType=INTEGER} and level=3
+	</select>
+
+	<select id="getUserByName" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from tb_admin_user
+		where username = #{username,jdbcType=INTEGER}
+	</select>
+
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from tb_admin_user
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.ipeaksoft.moneyday.core.entity.AdminUser"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into tb_admin_user (id, username, password,
+		company_name, linkman, phone,
+		comment, is_valid, create_time,
+		modify_time, pid, level
+		)
+		values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR},
+		#{password,jdbcType=VARCHAR},
+		#{companyName,jdbcType=VARCHAR}, #{linkman,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR},
+		#{comment,jdbcType=VARCHAR}, #{isValid,jdbcType=BIT},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{modifyTime,jdbcType=TIMESTAMP}, #{pid,jdbcType=INTEGER}, #{level,jdbcType=TINYINT}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.ipeaksoft.moneyday.core.entity.AdminUser"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into tb_admin_user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="username != null">
+				username,
+			</if>
+			<if test="password != null">
+				password,
+			</if>
+			<if test="companyName != null">
+				company_name,
+			</if>
+			<if test="linkman != null">
+				linkman,
+			</if>
+			<if test="phone != null">
+				phone,
+			</if>
+			<if test="comment != null">
+				comment,
+			</if>
+			<if test="isValid != null">
+				is_valid,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="modifyTime != null">
+				modify_time,
+			</if>
+			<if test="pid != null">
+				pid,
+			</if>
+			<if test="level != null">
+				level,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="username != null">
+				#{username,jdbcType=VARCHAR},
+			</if>
+			<if test="password != null">
+				#{password,jdbcType=VARCHAR},
+			</if>
+			<if test="companyName != null">
+				#{companyName,jdbcType=VARCHAR},
+			</if>
+			<if test="linkman != null">
+				#{linkman,jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null">
+				#{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				#{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="isValid != null">
+				#{isValid,jdbcType=BIT},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyTime != null">
+				#{modifyTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="pid != null">
+				#{pid,jdbcType=INTEGER},
+			</if>
+			<if test="level != null">
+				#{level,jdbcType=TINYINT},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ipeaksoft.moneyday.core.entity.AdminUser">
+		update tb_admin_user
+		<set>
+			<if test="username != null">
+				username = #{username,jdbcType=VARCHAR},
+			</if>
+			<if test="password != null">
+				password = #{password,jdbcType=VARCHAR},
+			</if>
+			<if test="companyName != null">
+				company_name = #{companyName,jdbcType=VARCHAR},
+			</if>
+			<if test="linkman != null">
+				linkman = #{linkman,jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null">
+				phone = #{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				comment = #{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="isValid != null">
+				is_valid = #{isValid,jdbcType=BIT},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyTime != null">
+				modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="pid != null">
+				pid = #{pid,jdbcType=INTEGER},
+			</if>
+			<if test="level != null">
+				level = #{level,jdbcType=TINYINT},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.ipeaksoft.moneyday.core.entity.AdminUser">
+		update tb_admin_user
+		set username = #{username,jdbcType=VARCHAR},
+		password = #{password,jdbcType=VARCHAR},
+		company_name = #{companyName,jdbcType=VARCHAR},
+		linkman = #{linkman,jdbcType=VARCHAR},
+		phone = #{phone,jdbcType=VARCHAR},
+		comment = #{comment,jdbcType=VARCHAR},
+		is_valid = #{isValid,jdbcType=BIT},
+		create_time = #{createTime,jdbcType=TIMESTAMP},
+		modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+		pid = #{pid,jdbcType=INTEGER},
+		level = #{level,jdbcType=TINYINT}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<update id="setUserInvalid" parameterType="Integer">
+		update tb_user set
+		is_valid=0 where id=#{id}
+	</update>
+
+	<select id="getValidUsersByRoleName" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select tu.*
+		from tb_user tu, tb_user_role tur, tb_role tr
+		where tu.id=tur.user_id and tr.id=tur.role_id
+		and tu.is_valid=1
+		and
+		tr.name=#{roleName, jdbcType=VARCHAR}
+	</select>
+
+
+	<select id="findUserByWhere" parameterType="com.ipeaksoft.moneyday.core.entity.AdminUser"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tb_admin_user
+		<where>
+			1=1
+			<if test="username != null">
+				and username = #{username,jdbcType=VARCHAR},
+			</if>
+			<if test="password != null">
+				and password = #{password,jdbcType=VARCHAR},
+			</if>
+			<if test="companyName != null">
+				and company_name = #{companyName,jdbcType=VARCHAR},
+			</if>
+			<if test="linkman != null">
+				and linkman = #{linkman,jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null">
+				and phone = #{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="comment != null">
+				and comment = #{comment,jdbcType=VARCHAR},
+			</if>
+			<if test="isValid != null">
+				and is_valid = #{isValid,jdbcType=BIT},
+			</if>
+			<if test="createTime != null">
+				and create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyTime != null">
+				and modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="pid != null">
+				pid = #{pid,jdbcType=INTEGER},
+			</if>
+			<if test="level != null">
+				and level = #{level,jdbcType=TINYINT}
+			</if>
+		</where>
+		ORDER BY rcg_id desc limit #{start},#{limit}
+	</select>
+
+	<select id="findPageUserByWhere" parameterType="java.util.Map"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tb_admin_user
+		<where>
+			1=1
+			<if test="username != null">
+				and username = #{username,jdbcType=VARCHAR}
+			</if>
+			<if test="password != null">
+				and password = #{password,jdbcType=VARCHAR}
+			</if>
+			<if test="companyName != null">
+				and company_name = #{companyName,jdbcType=VARCHAR}
+			</if>
+			<if test="linkman != null">
+				and linkman = #{linkman,jdbcType=VARCHAR}
+			</if>
+			<if test="phone != null">
+				and phone = #{phone,jdbcType=VARCHAR}
+			</if>
+			<if test="comment != null">
+				and comment = #{comment,jdbcType=VARCHAR}
+			</if>
+			<if test="isValid != null">
+				and is_valid = #{isValid,jdbcType=BIT}
+			</if>
+			<if test="createTime != null">
+				and create_time = #{createTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="modifyTime != null">
+				and modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="pid != null">
+				and pid = #{pid,jdbcType=INTEGER}
+			</if>
+			<if test="level != null">
+				and level = #{level,jdbcType=TINYINT}
+			</if>
+			<if test="keys != null">
+				and username like CONCAT('%','${keys}','%' )
+			</if>
+			<if test="ordeStr !=null">
+				order by ${ordeStr}
+			</if>
+		</where>
+		limit #{start},#{limit}
+	</select>
+	<select id="findPageUserByWhereCount" parameterType="java.util.Map"
+		resultType="Integer">
+		select
+		count(1)
+		from tb_admin_user
+		<where>
+			1=1
+			<if test="username != null">
+				and username = #{username,jdbcType=VARCHAR}
+			</if>
+			<if test="password != null">
+				and password = #{password,jdbcType=VARCHAR}
+			</if>
+			<if test="companyName != null">
+				and company_name = #{companyName,jdbcType=VARCHAR}
+			</if>
+			<if test="linkman != null">
+				and linkman = #{linkman,jdbcType=VARCHAR}
+			</if>
+			<if test="phone != null">
+				and phone = #{phone,jdbcType=VARCHAR}
+			</if>
+			<if test="comment != null">
+				and comment = #{comment,jdbcType=VARCHAR}
+			</if>
+			<if test="isValid != null">
+				and is_valid = #{isValid,jdbcType=BIT}
+			</if>
+			<if test="createTime != null">
+				and create_time = #{createTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="modifyTime != null">
+				and modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="pid != null">
+				and pid = #{pid,jdbcType=INTEGER}
+			</if>
+			<if test="level != null">
+				and level = #{level,jdbcType=TINYINT}
+			</if>
+			<if test="keys != null">
+				and username like CONCAT('%','${keys}','%' )
+			</if>
+
+		</where>
+
+	</select>
+</mapper>

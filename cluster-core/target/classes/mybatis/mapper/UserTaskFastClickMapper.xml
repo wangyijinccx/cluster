@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ipeaksoft.moneyday.core.mapper.UserTaskFastClickMapper">
+	<resultMap id="BaseResultMap"
+		type="com.ipeaksoft.moneyday.core.entity.UserTaskFastClick">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="mobile" jdbcType="VARCHAR" property="mobile" />
+		<result column="idfa" jdbcType="VARCHAR" property="idfa" />
+		<result column="task_id" jdbcType="BIGINT" property="taskId" />
+		<result column="appid" jdbcType="VARCHAR" property="appid" />
+		<result column="appname" jdbcType="VARCHAR" property="appname" />
+		<result column="point" jdbcType="VARCHAR" property="point" />
+		<result column="mac_address" jdbcType="VARCHAR" property="macAddress" />
+		<result column="clientip" jdbcType="VARCHAR" property="clientip" />
+		<result column="osversion" jdbcType="VARCHAR" property="osversion" />
+		<result column="language" jdbcType="VARCHAR" property="language" />
+		<result column="ssid" jdbcType="VARCHAR" property="ssid" />
+		<result column="carrier_name" jdbcType="VARCHAR" property="carrierName" />
+		<result column="process" jdbcType="VARCHAR" property="process" />
+		<result column="jail_break" jdbcType="INTEGER" property="jailBreak" />
+		<result column="client_type" jdbcType="INTEGER" property="clientType" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+	    <result column="country" property="country" />
+	    <result column="area" property="area" />
+	    <result column="province" property="province" />
+	    <result column="city" property="city" />
+	    <result column="county" property="county" />
+	    <result column="isp" property="isp" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id, mobile, idfa, task_id, appid, appname, point,
+		mac_address, clientip, osversion,
+		language, ssid, carrier_name, process,
+		jail_break, client_type, create_time,
+		country, area, province, city, county, isp
+	</sql>
+	<select id="selectByIdfa" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tb_user_task_fast_click
+		where idfa = #{idfa} and appid = #{appid}
+		ORDER BY create_time DESC 
+		LIMIT 1
+	</select>
+	<select id="selectByIdfaAndTaskId" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tb_user_task_fast_click
+		where idfa = #{idfa} and task_id =
+		#{taskId} ORDER BY create_time DESC
+		LIMIT 1
+	</select>
+	<select id="selectByMobileAndTaskId" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tb_user_task_fast_click
+		where mobile = #{mobile} and task_id =
+		#{taskId} ORDER BY create_time DESC
+		LIMIT 1
+	</select>
+	<select id="selectByMobileAndAppid" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tb_user_task_fast_click
+		where mobile = #{mobile} and appid =
+		#{appid} ORDER BY create_time DESC
+		LIMIT 1
+	</select>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Long"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tb_user_task_fast_click
+		where id = #{id}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		tb_user_task_fast_click
+		where id = #{id}
+	</delete>
+	<insert id="insert"
+		parameterType="com.ipeaksoft.moneyday.core.entity.UserTaskFastClick">
+		<selectKey resultType="long" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID() AS id
+		</selectKey>
+		insert into tb_user_task_fast_click (id, mobile, idfa, task_id, appid,
+		appname, point, mac_address, clientip, osversion, language, ssid,
+		carrier_name, process, jail_break, client_type, create_time) values
+		(#{id}, #{mobile}, #{idfa}, #{taskId}, #{appid}, #{appname}, #{point},
+		#{macAddress}, #{clientip}, #{osversion}, #{language}, #{ssid},
+		#{carrierName}, #{process}, #{jailBreak}, #{clientType},
+		#{createTime})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.ipeaksoft.moneyday.core.entity.UserTaskFastClick">
+		insert into tb_user_task_fast_click
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="mobile != null">
+				mobile,
+			</if>
+			<if test="idfa != null">
+				idfa,
+			</if>
+			<if test="taskId != null">
+				task_id,
+			</if>
+			<if test="appid != null">
+				appid,
+			</if>
+			<if test="appname != null">
+				appname,
+			</if>
+			<if test="point != null">
+				point,
+			</if>
+			<if test="macAddress != null">
+				mac_address,
+			</if>
+			<if test="clientip != null">
+				clientip,
+			</if>
+			<if test="osversion != null">
+				osversion,
+			</if>
+			<if test="language != null">
+				language,
+			</if>
+			<if test="ssid != null">
+				ssid,
+			</if>
+			<if test="carrierName != null">
+				carrier_name,
+			</if>
+			<if test="process != null">
+				process,
+			</if>
+			<if test="jailBreak != null">
+				jail_break,
+			</if>
+			<if test="clientType != null">
+				client_type,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="mobile != null">
+				#{mobile},
+			</if>
+			<if test="idfa != null">
+				#{idfa},
+			</if>
+			<if test="taskId != null">
+				#{taskId},
+			</if>
+			<if test="appid != null">
+				#{appid},
+			</if>
+			<if test="appname != null">
+				#{appname},
+			</if>
+			<if test="point != null">
+				#{point},
+			</if>
+			<if test="macAddress != null">
+				#{macAddress},
+			</if>
+			<if test="clientip != null">
+				#{clientip},
+			</if>
+			<if test="osversion != null">
+				#{osversion},
+			</if>
+			<if test="language != null">
+				#{language},
+			</if>
+			<if test="ssid != null">
+				#{ssid},
+			</if>
+			<if test="carrierName != null">
+				#{carrierName},
+			</if>
+			<if test="process != null">
+				#{process},
+			</if>
+			<if test="jailBreak != null">
+				#{jailBreak},
+			</if>
+			<if test="clientType != null">
+				#{clientType},
+			</if>
+			<if test="createTime != null">
+				#{createTime},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.ipeaksoft.moneyday.core.entity.UserTaskFastClick">
+		update tb_user_task_fast_click
+		<set>
+			<if test="mobile != null">
+				mobile = #{mobile},
+			</if>
+			<if test="idfa != null">
+				idfa = #{idfa},
+			</if>
+			<if test="taskId != null">
+				task_id = #{taskId},
+			</if>
+			<if test="appid != null">
+				appid = #{appid},
+			</if>
+			<if test="appname != null">
+				appname = #{appname},
+			</if>
+			<if test="point != null">
+				point = #{point},
+			</if>
+			<if test="macAddress != null">
+				mac_address = #{macAddress},
+			</if>
+			<if test="clientip != null">
+				clientip = #{clientip},
+			</if>
+			<if test="osversion != null">
+				osversion = #{osversion},
+			</if>
+			<if test="language != null">
+				language = #{language},
+			</if>
+			<if test="ssid != null">
+				ssid = #{ssid},
+			</if>
+			<if test="carrierName != null">
+				carrier_name = #{carrierName},
+			</if>
+			<if test="process != null">
+				process = #{process},
+			</if>
+			<if test="jailBreak != null">
+				jail_break = #{jailBreak},
+			</if>
+			<if test="clientType != null">
+				client_type = #{clientType},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime},
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.ipeaksoft.moneyday.core.entity.UserTaskFastClick">
+		update tb_user_task_fast_click
+		set mobile = #{mobile},
+		idfa = #{idfa},
+		task_id = #{taskId},
+		appid = #{appid},
+		appname =
+		#{appname},
+		point = #{point},
+		mac_address = #{macAddress},
+		clientip =
+		#{clientip},
+		osversion = #{osversion},
+		language = #{language},
+		ssid =
+		#{ssid},
+		carrier_name = #{carrierName},
+		process = #{process},
+		jail_break
+		= #{jailBreak},
+		client_type = #{clientType},
+		create_time = #{createTime}
+		where id = #{id}
+	</update>
+
+	<select id="selectNoLocation" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		FROM tb_user_task_fast_click t 
+		WHERE t.`create_time` > DATE_ADD(NOW(), INTERVAL -3 HOUR) 
+			AND t.country IS NULL AND clientip IS NOT NULL
+		ORDER BY t.`id`
+		limit 80
+	</select>
+
+	<update id="updateLocationByPrimaryKey"
+		parameterType="com.ipeaksoft.moneyday.core.entity.UserTaskFastClick">
+		update tb_user_task_fast_click
+		set country = #{country},
+		area = #{area},
+		province = #{province},
+		city = #{city},
+		county = #{county},
+		isp = #{isp}
+		where id = #{id}
+	</update>
+
+</mapper>

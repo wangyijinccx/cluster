@@ -1,0 +1,626 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ipeaksoft.moneyday.core.mapper.UserCashMapper">
+	<resultMap id="BaseResultMap" type="com.ipeaksoft.moneyday.core.entity.UserCash">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="orderid" property="orderid" jdbcType="VARCHAR" />
+		<result column="ordernum" property="ordernum" jdbcType="VARCHAR" />
+		<result column="description" property="description" jdbcType="VARCHAR" />
+		<result column="userid" property="userid" jdbcType="VARCHAR" />
+		<result column="amount" property="amount" jdbcType="INTEGER" />
+		<result column="credits" property="credits" jdbcType="INTEGER" />
+		<result column="totalcredits" property="totalcredits" jdbcType="BIGINT" />
+		<result column="exchange_type" property="exchangeType"
+			jdbcType="VARCHAR" />
+		<result column="alipay_account" property="alipayAccount"
+			jdbcType="VARCHAR" />
+		<result column="fullname" property="fullname" jdbcType="VARCHAR" />
+		<result column="mobile" property="mobile" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="status" property="status" jdbcType="CHAR" />
+		<result column="operate_time" property="operateTime" jdbcType="TIMESTAMP" />
+		<result column="operate_result" property="operateResult"
+			jdbcType="VARCHAR" />
+		<result column="operator" property="operator" jdbcType="VARCHAR" />
+		<result column="fromto" property="fromto" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="client_type" property="clientType" jdbcType="INTEGER" />
+	</resultMap>
+	<resultMap id="OrderResultMap"
+		type="com.ipeaksoft.moneyday.core.entity.UserCashOrder">
+		<result column="day" property="day" jdbcType="TIMESTAMP" />
+		<result column="amount" property="amount" jdbcType="INTEGER" />
+		<result column="status" property="status" jdbcType="INTEGER" />
+		<result column="times" property="times" jdbcType="INTEGER" />
+		<result column="fromto" property="fromto" jdbcType="VARCHAR" />
+		<result column="exchange_type" property="exchange_type"
+			jdbcType="VARCHAR" />
+
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id, orderid, ordernum, description, userid, amount,
+		credits, totalcredits,
+		exchange_type, alipay_account, fullname, mobile,
+		create_time,
+		status, operate_time,
+		operate_result, operator, client_type
+	</sql>
+	<select id="getAllMoney" resultType="Integer">
+		SELECT
+		SUM(amount) FROM
+		tb_user_cash
+	</select>
+	<select id="getAllAlipayMoney" resultType="Integer">
+		SELECT
+		SUM(amount) FROM
+		tb_user_cash WHERE
+		exchange_type = 'alipay'
+		AND STATUS = 9
+	</select>
+	<select id="getAllPhoneMoney" resultType="Integer">
+		SELECT
+		SUM(amount) FROM
+		tb_user_cash WHERE
+		exchange_type = 'phonebill'
+		AND STATUS = 9
+	</select>
+	<select id="selectAllByCredits" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		SELECT c.ordernum, c.exchange_type,
+		c.status, c.amount, c.credits,
+		c.alipay_account,
+		c.mobile,
+		c.operate_time,
+		c.create_time,
+		c.operate_result
+		FROM
+		tb_user_cash c
+		JOIN
+		tb_user u ON u.id
+		= c.userid AND
+		u.mobile=#{mobile,jdbcType=BIGINT}
+		AND
+		(c.exchange_type = 'phonebill' OR
+		c.exchange_type = 'alipay')
+		ORDER
+		BY
+		c.create_time
+		DESC
+		<if test="start !=null and size != null">
+	    <![CDATA[ LIMIT #{start,jdbcType=INTEGER},#{size,jdbcType=INTEGER} ]]>
+		</if>
+	</select>
+	<select id="selectRechargedByDay" resultMap="OrderResultMap"
+		parameterType="java.util.Date">
+		SELECT date(c.operate_time) as day,sum(c.amount) as amount,count(c.id)
+		as times,c.exchange_type as exchange_type,c.status as status
+		FROM
+		tb_user_cash c WHERE c.status IN (4,9)
+		<if test="time != null">
+			AND date(c.operate_time) > date(#{time,jdbcType=DATE})
+		</if>
+		GROUP BY date(c.operate_time),c.status,c.exchange_type
+		ORDER BY
+		date(c.operate_time) DESC
+	</select>
+	<select id="selectOrderByDay" resultMap="OrderResultMap"
+		parameterType="java.util.Date">
+		select date(c.create_time) as day,sum(c.amount) as amount,count(c.id)
+		as times,u.fromto as fromto,c.exchange_type as exchange_type
+		from
+		tb_user_cash c
+		join tb_user u on u.id=c.userid
+		<if test="time != null">
+			and date(c.create_time) > date(#{time,jdbcType=DATE})
+		</if>
+		group by date(c.create_time),u.fromto,c.exchange_type
+		order by
+		date(c.create_time) DESC
+	</select>
+	<select id="selectPageByOperate" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		SELECT c.operate_time, c.id, c.orderid,
+		c.ordernum,
+		c.userid, u.mobile
+		AS userphone,
+		c.amount, c.exchange_type,
+		c.alipay_account,
+		c.mobile ,
+		c.status, c.operate_result
+		FROM
+		tb_user_cash
+		c
+		JOIN tb_user u
+		ON
+		u.id=c.userid
+		<if test="day!=null and day != ''">
+		<![CDATA[  AND date(c.operate_time) = #{day,jdbcType=VARCHAR} ]]>
+		</if>
+		<if test="search !=null and search != ''">
+			<![CDATA[  AND (u.id LIKE CONCAT(CONCAT('%',  #{search,jdbcType=VARCHAR}), '%') OR u.username LIKE CONCAT(CONCAT('%',  #{search,jdbcType=VARCHAR}), '%'))]]>
+		</if>
+		ORDER
+		BY c.status DESC, c.operate_time
+		<if test="dir!=null and dir == 'desc'">
+			DESC
+		</if>
+		<if test="start !=null and size != null">
+	    <![CDATA[ LIMIT #{start,jdbcType=INTEGER},#{size,jdbcType=INTEGER} ]]>
+		</if>
+	</select>
+	<select id="countPageByOperate" resultType="Integer"
+		parameterType="java.util.Map">
+		SELECT count(*)
+		FROM tb_user_cash c
+		JOIN tb_user u
+		ON u.id=c.userid
+		<if test="day!=null and day != ''">
+		<![CDATA[  AND date(c.operate_time) = #{day,jdbcType=VARCHAR} ]]>
+		</if>
+		<if test="search !=null and search != ''">
+			<![CDATA[  AND (u.id LIKE CONCAT(CONCAT('%',  #{search,jdbcType=VARCHAR}), '%') OR u.username LIKE CONCAT(CONCAT('%',  #{search,jdbcType=VARCHAR}), '%'))]]>
+		</if>
+	</select>
+	<select id="selectPageByStatus" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		SELECT c.create_time, u.fromto, u.type, c.id, c.orderid,
+		c.ordernum,
+		c.userid, u.mobile AS userphone, au.username AS operator,
+		c.amount,
+		c.exchange_type,
+		c.alipay_account,
+		c.mobile , c.status,
+		c.operate_result, c.operate_time
+		FROM
+		tb_user_cash
+		c
+		JOIN tb_user u
+		ON
+		u.id=c.userid AND c.status = #{status,jdbcType=INTEGER}
+		<if test="from != null and from != ''">
+			<![CDATA[  AND date(c.create_time) >= #{from,jdbcType=VARCHAR} ]]>
+		</if>
+		<if test="to!=null and to != ''">
+			<![CDATA[  AND date(c.create_time)<= #{to,jdbcType=VARCHAR} ]]>
+		</if>
+		JOIN
+		tb_admin_user au ON au.id = c.operator
+		ORDER
+		BY c.status ASC,
+		c.create_time
+		<if test="dir!=null and dir == 'desc'">
+			DESC
+		</if>
+		<if test="start !=null and size != null">
+	    <![CDATA[ LIMIT #{start,jdbcType=INTEGER},#{size,jdbcType=INTEGER} ]]>
+		</if>
+	</select>
+	<select id="countPageByStatus" resultType="Integer"
+		parameterType="java.util.Map">
+		SELECT count(*) FROM tb_user_cash c WHERE
+		c.status =
+		#{status,jdbcType=INTEGER}
+		<if test="from != null and from != ''">
+			<![CDATA[  AND date(c.create_time) >= #{from,jdbcType=VARCHAR} ]]>
+		</if>
+		<if test="to!=null and to != ''">
+			<![CDATA[  AND date(c.create_time)<= #{to,jdbcType=VARCHAR} ]]>
+		</if>
+	</select>
+	<select id="selectPageByDay" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		SELECT c.create_time, u.fromto, u.type, c.id, c.orderid,
+		c.ordernum,
+		c.userid, u.mobile AS userphone,
+		c.amount, c.exchange_type,
+		c.alipay_account,
+		c.mobile , c.status, c.operate_result, c.operate_time
+		FROM
+		tb_user_cash
+		c
+		JOIN tb_user u
+		ON
+		u.id=c.userid
+		<if test="day!=null and day != ''">
+		<![CDATA[  AND date(c.create_time) = #{day,jdbcType=VARCHAR} ]]>
+		</if>
+		<if test="search !=null and search != ''">
+			<![CDATA[  AND (u.id LIKE CONCAT(CONCAT('%',  #{search,jdbcType=VARCHAR}), '%') OR u.username LIKE CONCAT(CONCAT('%',  #{search,jdbcType=VARCHAR}), '%'))]]>
+		</if>
+		ORDER
+		BY c.status ASC, c.create_time
+		<if test="dir!=null and dir == 'desc'">
+			DESC
+		</if>
+		<if test="start !=null and size != null">
+	    <![CDATA[ LIMIT #{start,jdbcType=INTEGER},#{size,jdbcType=INTEGER} ]]>
+		</if>
+	</select>
+	<select id="countPageByDay" resultType="Integer" parameterType="java.util.Map">
+		SELECT count(*)
+		FROM tb_user_cash c
+		JOIN tb_user u
+		ON u.id=c.userid
+		<if test="day!=null and day != ''">
+		<![CDATA[  AND date(c.create_time) = #{day,jdbcType=VARCHAR} ]]>
+		</if>
+		<if test="search !=null and search != ''">
+			<![CDATA[  AND (u.id LIKE CONCAT(CONCAT('%',  #{search,jdbcType=VARCHAR}), '%') OR u.username LIKE CONCAT(CONCAT('%',  #{search,jdbcType=VARCHAR}), '%'))]]>
+		</if>
+	</select>
+	<select id="selectPageByType" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		SELECT c.id, c.create_time, c.ordernum, c.exchange_type,
+		c.userid,
+		u.mobile AS
+		userphone,
+		c.alipay_account, c.mobile , c.status
+		FROM
+		tb_user_cash
+		c
+		JOIN
+		tb_user u
+		ON
+		u.id=c.userid
+		<if test="type!=null and type != ''">
+		<![CDATA[  AND c.exchange_type = #{type,jdbcType=VARCHAR} ]]>
+		</if>
+		<if test="from != null and from != ''">
+			<![CDATA[  AND date(c.create_time) >= #{from,jdbcType=VARCHAR} ]]>
+		</if>
+		<if test="to!=null and to != ''">
+			<![CDATA[  AND date(c.create_time)<= #{to,jdbcType=VARCHAR} ]]>
+		</if>
+		ORDER
+		BY c.create_time
+		<if test="dir!=null and dir == 'desc'">
+			DESC
+		</if>
+		<if test="start !=null and size != null">
+	    <![CDATA[ LIMIT #{start,jdbcType=INTEGER},#{size,jdbcType=INTEGER} ]]>
+		</if>
+	</select>
+	<select id="countPageByType" resultType="Integer" parameterType="java.util.Map">
+		SELECT count(*)
+		FROM tb_user_cash WHERE 1=1
+		<if test="type!=null and type != ''">
+		<![CDATA[  AND exchange_type = #{type,jdbcType=VARCHAR} ]]>
+		</if>
+		<if test="from != null and from != ''">
+			<![CDATA[  AND date(create_time) >= #{from,jdbcType=VARCHAR} ]]>
+		</if>
+		<if test="to!=null and to != ''">
+			<![CDATA[  AND date(create_time)<= #{to,jdbcType=VARCHAR} ]]>
+		</if>
+	</select>
+	<select id="selectPageByUser" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		SELECT
+		c.id,
+		c.create_time,
+		c.description,
+		c.orderid,
+		c.ordernum,
+		c.userid,
+		c.totalcredits,
+		u.award AS
+		amount,
+		c.status,
+		c.operate_result,
+		c.operate_time,
+		au.username
+		AS operator
+		FROM
+		tb_user_cash c
+		JOIN tb_user u
+		ON u.id = c.userid
+		AND
+		c.userid=#{id,jdbcType=BIGINT}
+		<if test="from != null and from != ''">
+			<![CDATA[  AND date(c.create_time) >= #{from,jdbcType=VARCHAR} ]]>
+		</if>
+		<if test="to!=null and to != ''">
+			<![CDATA[  AND date(c.create_time)<= #{to,jdbcType=VARCHAR} ]]>
+		</if>
+		<!-- <if test="search == null or search == ''"> LEFT </if> -->
+		JOIN
+		tb_admin_user au ON au.id = c.operator
+		<if test="search !=null and search != ''">
+			<![CDATA[  AND au.username LIKE CONCAT(CONCAT('%',  #{search,jdbcType=VARCHAR}), '%') ]]>
+		</if>
+		ORDER
+		BY
+		<if test="statusorder ==null and statusorder != ''">c.status ASC, </if>
+		c.create_time
+		DESC
+		<if test="start !=null and size != null">
+	    <![CDATA[ LIMIT #{start,jdbcType=INTEGER},#{size,jdbcType=INTEGER} ]]>
+		</if>
+	</select>
+	<select id="countPageByUser" resultType="Integer" parameterType="java.util.Map">
+		SELECT
+		count(*)
+		FROM
+		tb_user_cash c
+		JOIN tb_user u ON u.id = c.userid
+		AND
+		c.userid=#{id,jdbcType=BIGINT}
+		<if test="from!=null and from != ''">
+			<![CDATA[  AND date(c.create_time) >= #{from,jdbcType=VARCHAR} ]]>
+		</if>
+		<if test="to!=null and to != ''">
+			<![CDATA[  AND date(c.create_time)<= #{to,jdbcType=VARCHAR} ]]>
+		</if>
+		<if test="search == ''">
+			LEFT
+		</if>
+		JOIN
+		tb_admin_user au ON au.id = c.operator
+		<if test="search !=null and search != ''">
+			<![CDATA[  AND au.username LIKE CONCAT(CONCAT('%',  #{search,jdbcType=VARCHAR}), '%') ]]>
+		</if>
+	</select>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from tb_user_cash
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<select id="selectCountByStatus" resultType="java.lang.Integer"
+		parameterType="java.util.Date">
+		SELECT count(*)
+		FROM tb_user_cash
+		WHERE status = 0 AND
+		date(create_time) =
+		date(#{day,jdbcType=DATE})
+	</select>
+	<select id="selectByOrder" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from tb_user_cash
+		where ordernum = #{ordernum,jdbcType=VARCHAR}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		tb_user_cash
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert" parameterType="com.ipeaksoft.moneyday.core.entity.UserCash">
+		insert into tb_user_cash (id,
+		orderid, ordernum, description, userid,
+		amount, credits, totalcredits,
+		exchange_type,
+		alipay_account,
+		fullname, mobile, create_time,
+		status,
+		operate_time,
+		operate_result,
+		operator,client_type)
+		values (#{id,jdbcType=BIGINT},
+		#{orderid,jdbcType=VARCHAR},
+		#{ordernum,jdbcType=VARCHAR},
+		#{description,jdbcType=VARCHAR},
+		#{userid,jdbcType=VARCHAR},
+		#{amount,jdbcType=INTEGER}, #{credits,jdbcType=INTEGER},
+		#{totalcredits,jdbcType=BIGINT},
+		#{exchangeType,jdbcType=VARCHAR},
+		#{alipayAccount,jdbcType=VARCHAR},
+		#{fullname,jdbcType=VARCHAR},
+		#{mobile,jdbcType=VARCHAR},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{status,jdbcType=CHAR},
+		#{operateTime,jdbcType=TIMESTAMP},
+		#{operateResult,jdbcType=VARCHAR},
+		#{operator,jdbcType=INTEGER}),
+		#{clientType,jdbcType=INTEGER})
+	</insert>
+	<insert id="insertSelective" parameterType="com.ipeaksoft.moneyday.core.entity.UserCash">
+		insert into tb_user_cash
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="orderid != null">
+				orderid,
+			</if>
+			<if test="ordernum != null">
+				ordernum,
+			</if>
+			<if test="description != null">
+				description,
+			</if>
+			<if test="userid != null">
+				userid,
+			</if>
+			<if test="amount != null">
+				amount,
+			</if>
+			<if test="credits != null">
+				credits,
+			</if>
+			<if test="totalcredits != null">
+				totalcredits,
+			</if>
+			<if test="exchangeType != null">
+				exchange_type,
+			</if>
+			<if test="alipayAccount != null">
+				alipay_account,
+			</if>
+			<if test="fullname != null">
+				fullname,
+			</if>
+			<if test="mobile != null">
+				mobile,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="operateTime != null">
+				operate_time,
+			</if>
+			<if test="operateResult != null">
+				operate_result,
+			</if>
+			<if test="operator != null">
+				operator,
+			</if>
+			<if test="clientType != null">
+				client_type,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=BIGINT},
+			</if>
+			<if test="orderid != null">
+				#{orderid,jdbcType=VARCHAR},
+			</if>
+			<if test="ordernum != null">
+				#{ordernum,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				#{description,jdbcType=VARCHAR},
+			</if>
+			<if test="userid != null">
+				#{userid,jdbcType=VARCHAR},
+			</if>
+			<if test="amount != null">
+				#{amount,jdbcType=INTEGER},
+			</if>
+			<if test="credits != null">
+				#{credits,jdbcType=INTEGER},
+			</if>
+			<if test="totalcredits != null">
+				#{totalcredits,jdbcType=BIGINT},
+			</if>
+			<if test="exchangeType != null">
+				#{exchangeType,jdbcType=VARCHAR},
+			</if>
+			<if test="alipayAccount != null">
+				#{alipayAccount,jdbcType=VARCHAR},
+			</if>
+			<if test="fullname != null">
+				#{fullname,jdbcType=VARCHAR},
+			</if>
+			<if test="mobile != null">
+				#{mobile,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=CHAR},
+			</if>
+			<if test="operateTime != null">
+				#{operateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="operateResult != null">
+				#{operateResult,jdbcType=VARCHAR},
+			</if>
+			<if test="operator != null">
+				#{operator,jdbcType=INTEGER},
+			</if>
+			<if test="clientType != null">
+				#{clientType,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ipeaksoft.moneyday.core.entity.UserCash">
+		update tb_user_cash
+		<set>
+			<if test="orderid != null">
+				orderid = #{orderid,jdbcType=VARCHAR},
+			</if>
+			<if test="ordernum != null">
+				ordernum = #{ordernum,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				description = #{description,jdbcType=VARCHAR},
+			</if>
+			<if test="userid != null">
+				userid = #{userid,jdbcType=VARCHAR},
+			</if>
+			<if test="amount != null">
+				amount = #{amount,jdbcType=INTEGER},
+			</if>
+			<if test="credits != null">
+				credits = #{credits,jdbcType=INTEGER},
+			</if>
+			<if test="totalcredits != null">
+				totalcredits = #{totalcredits,jdbcType=INTEGER},
+			</if>
+			<if test="exchangeType != null">
+				exchange_type = #{exchangeType,jdbcType=VARCHAR},
+			</if>
+			<if test="alipayAccount != null">
+				alipay_account = #{alipayAccount,jdbcType=VARCHAR},
+			</if>
+			<if test="fullname != null">
+				fullname = #{fullname,jdbcType=VARCHAR},
+			</if>
+			<if test="mobile != null">
+				mobile = #{mobile,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=CHAR},
+			</if>
+			<if test="operateTime != null">
+				operate_time = #{operateTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="operateResult != null">
+				operate_result = #{operateResult,jdbcType=VARCHAR},
+			</if>
+			<if test="operator != null">
+				operator = #{operator,jdbcType=INTEGER},
+			</if>
+			<if test="clientType != null">
+				client_type = #{clientType,jdbcType=INTEGER},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.ipeaksoft.moneyday.core.entity.UserCash">
+		update
+		tb_user_cash
+		set orderid = #{orderid,jdbcType=VARCHAR},
+		ordernum =
+		#{ordernum,jdbcType=VARCHAR},
+		description =
+		#{description,jdbcType=VARCHAR},
+		userid = #{userid,jdbcType=VARCHAR},
+		amount = #{amount,jdbcType=INTEGER},
+		credits =
+		#{credits,jdbcType=INTEGER},
+		totalcredits =
+		#{totalcredits,jdbcType=INTEGER},
+		exchange_type =
+		#{exchangeType,jdbcType=VARCHAR},
+		alipay_account =
+		#{alipayAccount,jdbcType=VARCHAR},
+		fullname =
+		#{fullname,jdbcType=VARCHAR},
+		mobile = #{mobile,jdbcType=VARCHAR},
+		create_time = #{createTime,jdbcType=TIMESTAMP},
+		status =
+		#{status,jdbcType=CHAR},
+		operate_time =
+		#{operateTime,jdbcType=TIMESTAMP},
+		operate_result =
+		#{operateResult,jdbcType=VARCHAR},
+		operator =
+		#{operator,jdbcType=INTEGER},
+		client_type =
+		#{clientType,jdbcType=INTEGER}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+</mapper>

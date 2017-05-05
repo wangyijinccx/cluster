@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ipeaksoft.moneyday.core.mapper.NoticeMapper" >
+  <resultMap id="BaseResultMap" type="com.ipeaksoft.moneyday.core.entity.Notice" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="img" property="img" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="operator" property="operator" jdbcType="INTEGER" />
+     <result column="summary" property="summary" jdbcType="VARCHAR" />
+     <result column="operatorName" property="operatorName" jdbcType="VARCHAR" />
+  </resultMap>
+    <resultMap id="BaseResultMap1" type="com.ipeaksoft.moneyday.core.entity.Notice" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="content" property="content" jdbcType="VARCHAR" />
+    <result column="img" property="img" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="operator" property="operator" jdbcType="INTEGER" />
+     <result column="summary" property="summary" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    tb_notice.id, tb_notice.title, tb_notice.content, tb_notice.img, tb_notice.create_time, tb_notice.end_time, tb_notice.update_time, tb_notice.operator,tb_notice.summary
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_notice
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectAll" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    DISTINCT a.id, a.title, a.content, a.img, a.create_time, a.end_time, a.update_time, a.operator,a.summary
+    from tb_notice a 
+   <![CDATA[ where a.create_time<= #{today} and  a.end_time>=#{today}   ORDER BY a.create_time desc]]>
+  </select>
+  
+  
+  <select id="getFastClickUsers" resultType="java.lang.Integer">
+  	SELECT COUNT(DISTINCT mobile) FROM tb_user_task_fast_click
+  </select>
+  
+  <select id="getAdsClickUsers" resultType="java.lang.Integer">
+  	SELECT COUNT(DISTINCT mobile) FROM tb_user_task_ads_click
+  </select>
+  
+  <select id="getAllUserAward" resultType="java.lang.Long">
+ 	SELECT sum(award) from tb_user_award
+  </select>
+  
+  
+   <select id="hasNewAnnounce" resultType="java.lang.Integer" parameterType="java.util.Map" >
+    select 
+   count(*)
+    from tb_notice
+   <![CDATA[ where create_time<= #{today} and  end_time>=#{today} and id not in (select notice_id from  tb_user_notice where mobile=#{mobile})  ]]>
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_notice
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ipeaksoft.moneyday.core.entity.Notice" >
+    insert into tb_notice (id, title, content, 
+      img, create_time, end_time, 
+      update_time, operator,summary)
+    values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, 
+      #{img,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{operator,jdbcType=INTEGER},#{summary,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ipeaksoft.moneyday.core.entity.Notice" >
+    insert into tb_notice
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+      <if test="img != null" >
+        img,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="operator != null" >
+        operator,
+      </if>
+        <if test="summary != null" >
+        summary,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="img != null" >
+        #{img,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=INTEGER},
+      </if>
+            <if test="summary != null" >
+        #{summary,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ipeaksoft.moneyday.core.entity.Notice" >
+    update tb_notice
+    <set >
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null" >
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="img != null" >
+        img = #{img,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operator != null" >
+        operator = #{operator,jdbcType=INTEGER},
+      </if>
+            <if test="summary != null" >
+        summary = #{summary,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ipeaksoft.moneyday.core.entity.Notice" >
+    update tb_notice
+    set title = #{title,jdbcType=VARCHAR},
+      content = #{content,jdbcType=VARCHAR},
+      img = #{img,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      operator = #{operator,jdbcType=INTEGER},
+      summary=#{summary ,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="findPageList" parameterType="java.util.Map" resultMap="BaseResultMap">
+  	select 
+  	<include refid="Base_Column_List" />,tb_admin_user.linkman operatorName
+  	from tb_notice left join tb_admin_user on tb_notice.operator=tb_admin_user.id where 1=1
+  	<if test="startTime!=null and startTime!=''">
+  	 <![CDATA[ and tb_notice.create_time >={startTime} ]]>
+  	</if>
+  	<if test="endTime!=null and endTime!=''">
+  	 <![CDATA[ and tb_notice.create_time >={endTime} ]]>
+  	</if>
+  	<if test="keys!=null and keys!=''">
+  	<![CDATA[ and tb_notice.title like CONCAT('%','${keys}','%' ) ]]>
+  	</if>
+  	order by 
+  	<if test="orderStr!=null and orderStr!=''">
+  	  <![CDATA[  ${orderStr}  ]]>
+  	</if>
+  	<if test="orderStr==null or orderStr==''">
+  	tb_notice.create_time desc
+  	</if>
+  	
+  	<if test="start !=null and start!='' and limit != null and limit!=''">
+	    <![CDATA[  LIMIT #{start,jdbcType=INTEGER},#{limit,jdbcType=INTEGER} ]]>
+	</if>
+  </select>
+  <select id="findPageListCount" parameterType="java.util.Map" resultType="Integer">
+  select count(1) from tb_notice where 1=1 
+  <if test="keys!=null and keys!=''">
+  	<![CDATA[ and title like CONCAT('%','${keys}','%' ) ]]>
+  	</if>
+  </select>
+
+</mapper>

@@ -1,0 +1,30 @@
+11:58:02.482 [main] ERROR com.ipeaksoft.moneyday.core.service.HttpService:122 - ERROR:http://api.refanqie.com/1/hlw-coreapi/channel/checkIdfa.json?appid=&idfa=000003AA-0863-4716-A709-5859E14130AF&channel=rfqxgm2016
+java.lang.NullPointerException: null
+	at com.ipeaksoft.moneyday.core.service.HttpService.get(HttpService.java:114) ~[classes/:na]
+	at com.ipeaksoft.moneyday.api.service.CallbackService.main(CallbackService.java:343) [classes/:na]
+11:58:03.686 [main] INFO  com.ipeaksoft.moneyday.core.service.HttpService:130 - GET to:http://api.refanqie.com/1/hlw-coreapi/channel/checkIdfa.json?appid=&idfa=000003AA-0863-4716-A709-5859E14130AF&channel=rfqxgm2016, result:null
+11:58:43.881 [main] ERROR com.ipeaksoft.moneyday.core.service.HttpService:122 - ERROR:http://api.refanqie.com/1/hlw-coreapi/channel/checkIdfa.json?appid=&idfa=000003AA-0863-4716-A709-5859E14130AF&channel=rfqxgm2016
+java.lang.NullPointerException: null
+	at com.ipeaksoft.moneyday.core.service.HttpService.get(HttpService.java:114) ~[classes/:na]
+	at com.ipeaksoft.moneyday.api.service.CallbackService.main(CallbackService.java:343) [classes/:na]
+11:58:43.896 [main] INFO  com.ipeaksoft.moneyday.core.service.HttpService:130 - GET to:http://api.refanqie.com/1/hlw-coreapi/channel/checkIdfa.json?appid=&idfa=000003AA-0863-4716-A709-5859E14130AF&channel=rfqxgm2016, result:null
+12:00:17.182 [main] ERROR com.ipeaksoft.moneyday.core.service.HttpService:122 - ERROR:http://api.refanqie.com/1/hlw-coreapi/channel/checkIdfa.json?appid=1059661393&idfa=000003AA-0863-4716-A709-5859E14130AF&channel=rfqxgm2016
+java.lang.NullPointerException: null
+	at com.ipeaksoft.moneyday.core.service.HttpService.get(HttpService.java:114) ~[classes/:na]
+	at com.ipeaksoft.moneyday.api.service.CallbackService.main(CallbackService.java:343) [classes/:na]
+12:00:17.198 [main] INFO  com.ipeaksoft.moneyday.core.service.HttpService:130 - GET to:http://api.refanqie.com/1/hlw-coreapi/channel/checkIdfa.json?appid=1059661393&idfa=000003AA-0863-4716-A709-5859E14130AF&channel=rfqxgm2016, result:null
+12:10:36.764 [main] ERROR com.ipeaksoft.moneyday.core.service.HttpService:122 - ERROR:http://api.refanqie.com/1/hlw-coreapi/channel/checkIdfa.json?appid=1059661393&idfa=000003AA-0863-4716-A709-5859E14130AF&channel=rfqxgm2016
+java.lang.NullPointerException: null
+	at com.ipeaksoft.moneyday.core.service.HttpService.get(HttpService.java:114) ~[classes/:na]
+	at com.ipeaksoft.moneyday.api.service.CallbackService.main(CallbackService.java:343) [classes/:na]
+12:10:36.780 [main] INFO  com.ipeaksoft.moneyday.core.service.HttpService:130 - GET to:http://api.refanqie.com/1/hlw-coreapi/channel/checkIdfa.json?appid=1059661393&idfa=000003AA-0863-4716-A709-5859E14130AF&channel=rfqxgm2016, result:null
+12:11:17.319 [main] ERROR com.ipeaksoft.moneyday.core.service.HttpService:122 - ERROR:http://api.refanqie.com/1/hlw-coreapi/channel/checkIdfa.json?appid=1059661393&idfa=000003AA-0863-4716-A709-5859E14130AF&channel=rfqxgm2016
+java.lang.NullPointerException: null
+	at com.ipeaksoft.moneyday.core.service.HttpService.get(HttpService.java:114) ~[classes/:na]
+	at com.ipeaksoft.moneyday.api.service.CallbackService.main(CallbackService.java:343) [classes/:na]
+12:11:17.334 [main] INFO  com.ipeaksoft.moneyday.core.service.HttpService:130 - GET to:http://api.refanqie.com/1/hlw-coreapi/channel/checkIdfa.json?appid=1059661393&idfa=000003AA-0863-4716-A709-5859E14130AF&channel=rfqxgm2016, result:null
+12:12:16.549 [main] ERROR com.ipeaksoft.moneyday.core.service.HttpService:122 - ERROR:http://api.refanqie.com/1/hlw-coreapi/channel/checkIdfa.json?appid=1059661393&idfa=000003AA-0863-4716-A709-5859E14130AF&channel=rfqxgm2016
+java.lang.NullPointerException: null
+	at com.ipeaksoft.moneyday.core.service.HttpService.get(HttpService.java:114) ~[classes/:na]
+	at com.ipeaksoft.moneyday.api.service.CallbackService.main(CallbackService.java:343) [classes/:na]
+12:12:16.549 [main] INFO  com.ipeaksoft.moneyday.core.service.HttpService:130 - GET to:http://api.refanqie.com/1/hlw-coreapi/channel/checkIdfa.json?appid=1059661393&idfa=000003AA-0863-4716-A709-5859E14130AF&channel=rfqxgm2016, result:null

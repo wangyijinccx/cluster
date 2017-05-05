@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ipeaksoft.moneyday.core.mapper.UserRecordMapper">
+	<resultMap id="BaseResultMap" type="com.ipeaksoft.moneyday.core.entity.UserRecord">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="mobile" property="mobile" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="description" property="description" jdbcType="VARCHAR" />
+		<result column="award" property="award" jdbcType="INTEGER" />
+		<result column="type" property="type" jdbcType="CHAR" />
+		<result column="total_award" property="totalAward" jdbcType="INTEGER" />
+		<result column="pid" property="pid" jdbcType="BIGINT" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, mobile, create_time, description, award, type, total_award, pid
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from tb_user_record
+		where id = #{id}
+	</select>
+
+	<select id="selectPageByMobile" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM tb_user_record
+		WHERE mobile = #{mobile}
+		ORDER BY create_time DESC
+		<if test="start !=null and size != null">
+	    <![CDATA[ LIMIT #{start,jdbcType=INTEGER},#{size,jdbcType=INTEGER} ]]>
+		</if>
+	</select>
+
+	<select id="selectTodayAwardByMobile" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		select
+		<include refid="Base_Column_List" />
+		from tb_user_record
+		where mobile = #{mobile} and create_time LIKE '%${today}%' and award>0
+		ORDER BY create_time DESC LIMIT 1
+	</select>
+
+	<select id="getTodayAwardByMobile" resultType="java.lang.Integer"
+		parameterType="java.util.Map">
+		select
+		sum(award)
+		from tb_user_record
+		where mobile = #{mobile} and create_time LIKE '%${today}%' and award>0  and (!(type='CASH_FAIL' or type='RECHARGE_FAIL'))
+	</select>
+	
+	<select id="getTotalAwardByMobile" resultType="java.lang.Integer"
+		parameterType="java.lang.String">
+		select
+		sum(award)
+		from tb_user_record
+		where mobile = #{mobile}  and award>0  and (!(type='CASH_FAIL' or type='RECHARGE_FAIL'))
+	</select>
+
+	
+	<select id="selectLastByMobile" resultMap="BaseResultMap"
+		parameterType="string">
+		select
+		<include refid="Base_Column_List" />
+		from tb_user_record
+		where mobile = #{mobile}
+		order by id desc
+		limit 1
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from tb_user_record
+		where id = #{id}
+	</delete>
+	<insert id="insert" parameterType="com.ipeaksoft.moneyday.core.entity.UserRecord">
+		<selectKey resultType="long" order="AFTER" keyProperty="id">
+			SELECT LAST_INSERT_ID() AS id
+		</selectKey>
+		insert into tb_user_record (id, mobile, create_time,
+		description, award, type,
+		total_award, pid)
+		values (#{id}, #{mobile}, #{createTime},
+		#{description}, #{award}, #{type},
+		#{totalAward}, #{pid})
+	</insert>
+	<insert id="insertSelective" parameterType="com.ipeaksoft.moneyday.core.entity.UserRecord">
+		insert into tb_user_record
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="mobile != null">
+				mobile,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="description != null">
+				description,
+			</if>
+			<if test="award != null">
+				award,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="totalAward != null">
+				total_award,
+			</if>
+			<if test="pid != null">
+				pid,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="mobile != null">
+				#{mobile},
+			</if>
+			<if test="createTime != null">
+				#{createTime},
+			</if>
+			<if test="description != null">
+				#{description},
+			</if>
+			<if test="award != null">
+				#{award},
+			</if>
+			<if test="type != null">
+				#{type},
+			</if>
+			<if test="totalAward != null">
+				#{totalAward},
+			</if>
+			<if test="pid != null">
+				#{pid},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ipeaksoft.moneyday.core.entity.UserRecord">
+		update tb_user_record
+		<set>
+			<if test="mobile != null">
+				mobile = #{mobile},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime},
+			</if>
+			<if test="description != null">
+				description = #{description},
+			</if>
+			<if test="award != null">
+				award = #{award},
+			</if>
+			<if test="type != null">
+				type = #{type},
+			</if>
+			<if test="totalAward != null">
+				total_award = #{totalAward},
+			</if>
+			<if test="pid != null">
+				pid = #{pid},
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.ipeaksoft.moneyday.core.entity.UserRecord">
+		update tb_user_record
+		set mobile = #{mobile},
+		create_time = #{createTime},
+		description = #{description},
+		award = #{award},
+		type = #{type},
+		total_award = #{totalAward},
+		pid = #{pid}
+		where id = #{id}
+	</update>
+</mapper>

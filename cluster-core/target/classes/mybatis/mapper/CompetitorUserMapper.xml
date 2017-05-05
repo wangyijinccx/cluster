@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ipeaksoft.moneyday.core.mapper.CompetitorUserMapper">
+	<resultMap id="BaseResultMap"
+		type="com.ipeaksoft.moneyday.core.entity.CompetitorUser">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="mobile" property="mobile" jdbcType="VARCHAR" />
+		<result column="idfa" property="idfa" jdbcType="VARCHAR" />
+		<result column="competitorid" property="competitorid" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, mobile, idfa, competitorid, create_time, modify_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from tb_competitor_user
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectAll" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tb_competitor_user
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		tb_competitor_user
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.ipeaksoft.moneyday.core.entity.CompetitorUser">
+		insert into tb_competitor_user
+		(id,
+		mobile, idfa, competitorid, create_time,
+		modify_time)
+		values
+		(#{id,jdbcType=INTEGER}, #{mobile,jdbcType=VARCHAR},
+		#{idfa,jdbcType=VARCHAR}, #{competitorid,jdbcType=VARCHAR}, now(),
+		now())
+	</insert>
+	<insert id="insertSelective" parameterType="com.ipeaksoft.moneyday.core.entity.CompetitorUser">
+		insert into tb_competitor_user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="mobile != null">
+				mobile,
+			</if>
+			<if test="idfa != null">
+				idfa,
+			</if>
+			<if test="competitorid != null">
+				competitorid,
+			</if>
+			<if test="createTime != null">
+				create_time
+			</if>
+			<if test="modifyTime != null">
+				modify_time
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="mobile != null">
+				#{mobile,jdbcType=VARCHAR},
+			</if>
+			<if test="idfa != null">
+				#{idfa,jdbcType=VARCHAR},
+			</if>
+			<if test="competitorid != null">
+				#{competitorid,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyTime != null">
+				#{modifyTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ipeaksoft.moneyday.core.entity.CompetitorUser">
+		update tb_competitor_user
+		<set>
+			<if test="mobile != null">
+				mobile = #{mobile,jdbcType=VARCHAR},
+			</if>
+			<if test="idfa != null">
+				idfa = #{idfa,jdbcType=VARCHAR},
+			</if>
+			<if test="competitorid != null">
+				competitorid = #{competitorid,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyTime != null">
+				modify_time = #{modifyTime,jdbcType=TIMESTAMP}
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.ipeaksoft.moneyday.core.entity.CompetitorUser">
+		update
+		tb_competitor_user
+		set
+		mobile = #{mobile,jdbcType=VARCHAR},
+		idfa =
+		#{idfa,jdbcType=VARCHAR},
+		competitorid =
+		#{competitorid,jdbcType=VARCHAR},
+		create_time =
+		#{createTime,jdbcType=TIMESTAMP},
+		modify_time =
+		#{modifyTime,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

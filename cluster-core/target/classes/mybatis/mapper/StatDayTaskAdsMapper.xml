@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ipeaksoft.moneyday.core.mapper.StatDayTaskAdsMapper" >
+  <resultMap id="BaseResultMap" type="com.ipeaksoft.moneyday.core.entity.StatDayTaskAds" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="day" property="day" jdbcType="DATE" />
+    <result column="ads_id" property="adsId" jdbcType="INTEGER" />
+    <result column="task_id" property="taskId" jdbcType="VARCHAR" />
+    <result column="task_name" property="taskName" jdbcType="VARCHAR" />
+    <result column="comp" property="comp" jdbcType="INTEGER" />
+    <result column="award" property="award" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, day, ads_id, task_id, task_name, comp, award, create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_stat_day_task_ads
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_stat_day_task_ads
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.ipeaksoft.moneyday.core.entity.StatDayTaskAds" >
+    insert into tb_stat_day_task_ads (id, day, ads_id, task_id, 
+      task_name, comp, award, 
+      create_time)
+    values (#{id,jdbcType=BIGINT}, #{day,jdbcType=DATE}, #{adsId,jdbcType=INTEGER}, #{taskId,jdbcType=VARCHAR}, 
+      #{taskName,jdbcType=VARCHAR}, #{comp,jdbcType=INTEGER}, #{award,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ipeaksoft.moneyday.core.entity.StatDayTaskAds" >
+    insert into tb_stat_day_task_ads
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="day != null" >
+        day,
+      </if>
+      <if test="adsId != null" >
+        ads_id,
+      </if>
+      <if test="taskId != null" >
+        task_id,
+      </if>
+      <if test="taskName != null" >
+        task_name,
+      </if>
+      <if test="comp != null" >
+        comp,
+      </if>
+      <if test="award != null" >
+        award,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="day != null" >
+        #{day,jdbcType=DATE},
+      </if>
+      <if test="adsId != null" >
+        #{adsId,jdbcType=INTEGER},
+      </if>
+      <if test="taskId != null" >
+        #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="taskName != null" >
+        #{taskName,jdbcType=VARCHAR},
+      </if>
+      <if test="comp != null" >
+        #{comp,jdbcType=INTEGER},
+      </if>
+      <if test="award != null" >
+        #{award,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ipeaksoft.moneyday.core.entity.StatDayTaskAds" >
+    update tb_stat_day_task_ads
+    <set >
+      <if test="day != null" >
+        day = #{day,jdbcType=DATE},
+      </if>
+      <if test="adsId != null" >
+        ads_id = #{adsId,jdbcType=INTEGER},
+      </if>
+      <if test="taskId != null" >
+        task_id = #{taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="taskName != null" >
+        task_name = #{taskName,jdbcType=VARCHAR},
+      </if>
+      <if test="comp != null" >
+        comp = #{comp,jdbcType=INTEGER},
+      </if>
+      <if test="award != null" >
+        award = #{award,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ipeaksoft.moneyday.core.entity.StatDayTaskAds" >
+    update tb_stat_day_task_ads
+    set day = #{day,jdbcType=DATE},
+      ads_id = #{adsId,jdbcType=INTEGER},
+      task_id = #{taskId,jdbcType=VARCHAR},
+      task_name = #{taskName,jdbcType=VARCHAR},
+      comp = #{comp,jdbcType=INTEGER},
+      award = #{award,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

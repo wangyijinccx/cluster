@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ipeaksoft.moneyday.core.mapper.UserTaskAdsClickMapper">
+  <resultMap id="BaseResultMap" type="com.ipeaksoft.moneyday.core.entity.UserTaskAdsClick">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="idfa" jdbcType="VARCHAR" property="idfa" />
+    <result column="union_name" jdbcType="VARCHAR" property="unionName" />
+    <result column="appid" jdbcType="VARCHAR" property="appid" />
+    <result column="appname" jdbcType="VARCHAR" property="appname" />
+    <result column="point" jdbcType="VARCHAR" property="point" />
+    <result column="mac_address" jdbcType="VARCHAR" property="macAddress" />
+    <result column="clientip" jdbcType="VARCHAR" property="clientip" />
+    <result column="osversion" jdbcType="VARCHAR" property="osversion" />
+    <result column="language" jdbcType="VARCHAR" property="language" />
+    <result column="ssid" jdbcType="VARCHAR" property="ssid" />
+    <result column="carrier_name" jdbcType="VARCHAR" property="carrierName" />
+    <result column="process" jdbcType="VARCHAR" property="process" />
+    <result column="jail_break" jdbcType="INTEGER" property="jailBreak" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, mobile, idfa, union_name, appid, appname, point, mac_address, clientip, osversion, 
+    language, ssid, carrier_name, process, jail_break, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from tb_user_task_ads_click
+    where id = #{id}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from tb_user_task_ads_click
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.ipeaksoft.moneyday.core.entity.UserTaskAdsClick">
+  	<selectKey resultType="long" order="AFTER" keyProperty="id">
+		SELECT LAST_INSERT_ID() AS id
+	</selectKey>
+    insert into tb_user_task_ads_click (id, mobile, idfa, 
+      union_name, appid, appname, 
+      point, mac_address, clientip, 
+      osversion, language, ssid, 
+      carrier_name, process, jail_break, 
+      create_time)
+    values (#{id}, #{mobile}, #{idfa}, 
+      #{unionName}, #{appid}, #{appname}, 
+      #{point}, #{macAddress}, #{clientip}, 
+      #{osversion}, #{language}, #{ssid}, 
+      #{carrierName}, #{process}, #{jailBreak}, 
+      #{createTime})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ipeaksoft.moneyday.core.entity.UserTaskAdsClick">
+    insert into tb_user_task_ads_click
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="mobile != null">
+        mobile,
+      </if>
+      <if test="idfa != null">
+        idfa,
+      </if>
+      <if test="unionName != null">
+        union_name,
+      </if>
+      <if test="appid != null">
+        appid,
+      </if>
+      <if test="appname != null">
+        appname,
+      </if>
+      <if test="point != null">
+        point,
+      </if>
+      <if test="macAddress != null">
+        mac_address,
+      </if>
+      <if test="clientip != null">
+        clientip,
+      </if>
+      <if test="osversion != null">
+        osversion,
+      </if>
+      <if test="language != null">
+        language,
+      </if>
+      <if test="ssid != null">
+        ssid,
+      </if>
+      <if test="carrierName != null">
+        carrier_name,
+      </if>
+      <if test="process != null">
+        process,
+      </if>
+      <if test="jailBreak != null">
+        jail_break,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id},
+      </if>
+      <if test="mobile != null">
+        #{mobile},
+      </if>
+      <if test="idfa != null">
+        #{idfa},
+      </if>
+      <if test="unionName != null">
+        #{unionName},
+      </if>
+      <if test="appid != null">
+        #{appid},
+      </if>
+      <if test="appname != null">
+        #{appname},
+      </if>
+      <if test="point != null">
+        #{point},
+      </if>
+      <if test="macAddress != null">
+        #{macAddress},
+      </if>
+      <if test="clientip != null">
+        #{clientip},
+      </if>
+      <if test="osversion != null">
+        #{osversion},
+      </if>
+      <if test="language != null">
+        #{language},
+      </if>
+      <if test="ssid != null">
+        #{ssid},
+      </if>
+      <if test="carrierName != null">
+        #{carrierName},
+      </if>
+      <if test="process != null">
+        #{process},
+      </if>
+      <if test="jailBreak != null">
+        #{jailBreak},
+      </if>
+      <if test="createTime != null">
+        #{createTime},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ipeaksoft.moneyday.core.entity.UserTaskAdsClick">
+    update tb_user_task_ads_click
+    <set>
+      <if test="mobile != null">
+        mobile = #{mobile},
+      </if>
+      <if test="idfa != null">
+        idfa = #{idfa},
+      </if>
+      <if test="unionName != null">
+        union_name = #{unionName},
+      </if>
+      <if test="appid != null">
+        appid = #{appid},
+      </if>
+      <if test="appname != null">
+        appname = #{appname},
+      </if>
+      <if test="point != null">
+        point = #{point},
+      </if>
+      <if test="macAddress != null">
+        mac_address = #{macAddress},
+      </if>
+      <if test="clientip != null">
+        clientip = #{clientip},
+      </if>
+      <if test="osversion != null">
+        osversion = #{osversion},
+      </if>
+      <if test="language != null">
+        language = #{language},
+      </if>
+      <if test="ssid != null">
+        ssid = #{ssid},
+      </if>
+      <if test="carrierName != null">
+        carrier_name = #{carrierName},
+      </if>
+      <if test="process != null">
+        process = #{process},
+      </if>
+      <if test="jailBreak != null">
+        jail_break = #{jailBreak},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ipeaksoft.moneyday.core.entity.UserTaskAdsClick">
+    update tb_user_task_ads_click
+    set mobile = #{mobile},
+      idfa = #{idfa},
+      union_name = #{unionName},
+      appid = #{appid},
+      appname = #{appname},
+      point = #{point},
+      mac_address = #{macAddress},
+      clientip = #{clientip},
+      osversion = #{osversion},
+      language = #{language},
+      ssid = #{ssid},
+      carrier_name = #{carrierName},
+      process = #{process},
+      jail_break = #{jailBreak},
+      create_time = #{createTime}
+    where id = #{id}
+  </update>
+</mapper>

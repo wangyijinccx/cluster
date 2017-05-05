@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+    	http://www.springframework.org/schema/security	http://www.springframework.org/schema/security/spring-security.xsd
+		http://www.springframework.org/schema/beans		http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- Configuring RoleVoter bean to use custom access roles, by default roles 
+		should be in the form ROLE_{XXX} -->
+	<beans:bean id="roleVoter"
+		class="org.springframework.security.access.vote.RoleVoter">
+		<beans:property name="rolePrefix" value="R_"></beans:property>
+	</beans:bean>
+
+	<beans:bean id="accessDecisionManager"
+		class="org.springframework.security.access.vote.AffirmativeBased">
+		<beans:constructor-arg name="decisionVoters"
+			ref="roleVoter" />
+	</beans:bean>
+	<http authentication-manager-ref="dao-auth"
+		access-decision-manager-ref="accessDecisionManager">
+
+		<intercept-url pattern="/search/search_user" access="R_ADMIN,R_OPERATOR" />
+		<intercept-url pattern="/search/quick_task" access="R_ADMIN,R_OPERATOR" />
+		<intercept-url pattern="/search/general_task" access="R_ADMIN,R_OPERATOR" />
+		<intercept-url pattern="/search/member_list" access="R_ADMIN,R_OPERATOR" />
+		<intercept-url pattern="/search/search_performance"
+			access="R_ADMIN,R_OPERATOR,R_PROMOTER" />
+
+		<intercept-url pattern="/account/exception" access="R_ADMIN,R_OPERATOR" />
+		<intercept-url pattern="/account/create" access="R_ADMIN,R_OPERATOR,R_PROMOTER" />
+		<intercept-url pattern="/account/list" access="R_ADMIN,R_OPERATOR,R_PROMOTER" />
+		<intercept-url pattern="/account/backlist" access="R_ADMIN,R_OPERATOR" />
+		<intercept-url pattern="/weightAccount/weight_account_list.jsp"
+			access="R_ADMIN,R_OPERATOR,R_WEIGHT_ACCOUNT_MANAGER" />
+
+		<intercept-url pattern="/task/published" access="R_ADMIN" />
+		<intercept-url pattern="/task/published/create" access="R_ADMIN" />
+		<intercept-url pattern="/task/normal" access="R_ADMIN" />
+		<intercept-url pattern="/task/normal/add" access="R_ADMIN" />
+
+		<intercept-url pattern="/bill/checked/list" access="R_ADMIN,R_OPERATOR" />
+		<intercept-url pattern="/bill/delayed/list" access="R_ADMIN,R_OPERATOR" />
+		<intercept-url pattern="/bill/wrong/list" access="R_ADMIN,R_OPERATOR" />
+		<intercept-url pattern="/bill/recharged/list" access="R_ADMIN,R_OPERATOR" />
+		<intercept-url pattern="/bill/searched/list" access="R_ADMIN,R_OPERATOR" />
+
+		<intercept-url pattern="/notice/list" access="R_ADMIN" />
+		
+		<intercept-url pattern="/common/change_password.jsp" access="R_ADMIN,R_PROMOTER,R_OPERATOR,R_WEIGHT_ACCOUNT_MANAGER" />
+
+		<form-login login-page="/login.jsp"
+			authentication-failure-url="/login?error=1" username-parameter="username"
+			password-parameter="password" default-target-url="/index"
+			always-use-default-target="true" />
+		<logout invalidate-session="true" logout-success-url="/logout"
+			logout-url="/j_spring_security_logout" delete-cookies="JSESSIONID" />
+		<access-denied-handler error-page="/denied" />
+		<session-management invalid-session-url="/login">
+			<concurrency-control max-sessions="1"
+				expired-url="/login?error=3" />
+		</session-management>
+
+		<remember-me key="e37f4b31-0c45-11dd-bd0b-0800200c9a66"
+			token-validity-seconds="604800" remember-me-parameter="remember_me" />
+
+	</http>
+
+	<authentication-manager id="dao-auth">
+		<authentication-provider user-service-ref="userDetailServiceImpl">
+			<password-encoder hash="md5" />
+		</authentication-provider>
+	</authentication-manager>
+
+</beans:beans>

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ipeaksoft.moneyday.core.mapper.StatDayMapper" >
+  <resultMap id="BaseResultMap" type="com.ipeaksoft.moneyday.core.entity.StatDay" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="day" property="day" jdbcType="DATE" />
+    <result column="task_type" property="taskType" jdbcType="INTEGER" />
+    <result column="complete_time" property="completeTime" jdbcType="INTEGER" />
+    <result column="participants_num" property="participantsNum" jdbcType="INTEGER" />
+    <result column="online_user" property="onlineUser" jdbcType="INTEGER" />
+    <result column="online_earnings" property="onlineEarnings" jdbcType="INTEGER" />
+    <result column="offline_user" property="offlineUser" jdbcType="TIMESTAMP" />
+     <result column="offline_earnings" property="offlineEarnings" jdbcType="TIMESTAMP" />
+      <result column="all_earnings" property="allEarnings" jdbcType="TIMESTAMP" />
+       <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, day, task_type,complete_time,participants_num,online_user,online_earnings,offline_user,offline_earnings,all_earnings,create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_stat_day
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  
+  <select id="findPageList" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_stat_day where 1=1
+    <if test="taskType !=null">
+    	<![CDATA[ and task_type=#{taskType,jdbcType=INTEGER} ]]> 
+    </if>
+   <if test="startDate!=null">
+   
+     <![CDATA[ and day>=#{startDate,jdbcType=DATE} ]]>
+   </if>
+   <if test="endDate!=null">
+      <![CDATA[ and day<=#{endDate,jdbcType=DATE} ]]>
+   </if>
+    order by create_time desc
+    <if test="currentPage !=null and pageSize != null">
+     <![CDATA[  LIMIT #{currentPage,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER} ]]>
+    </if>
+  </select>
+  <select id="findPageListCount" resultType="Integer" parameterType="java.util.Map" >
+    select 
+    count(1) 
+    from tb_stat_day where 1=1
+    <if test="taskType !=null">
+    	and task_type=#{taskType,jdbcType=INTEGER}
+    </if>
+    <if test="startDate!=null">
+   
+     <![CDATA[ and day>=#{startDate,jdbcType=DATE} ]]>
+   </if>
+   <if test="endDate!=null">
+      <![CDATA[ and day<=#{endDate,jdbcType=DATE} ]]>
+   </if>
+     
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_stat_day
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.ipeaksoft.moneyday.core.entity.StatDay" >
+    insert into tb_stat_day (id, day, times_fast, 
+      award_fast, times_ads, award_ads, 
+      award_total, create_time)
+    values (#{id,jdbcType=BIGINT}, #{day,jdbcType=DATE}, #{timesFast,jdbcType=INTEGER}, 
+      #{awardFast,jdbcType=INTEGER}, #{timesAds,jdbcType=INTEGER}, #{awardAds,jdbcType=INTEGER}, 
+      #{awardTotal,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ipeaksoft.moneyday.core.entity.StatDay" >
+    insert into tb_stat_day
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="day != null" >
+        day,
+      </if>
+      <if test="timesFast != null" >
+        times_fast,
+      </if>
+      <if test="awardFast != null" >
+        award_fast,
+      </if>
+      <if test="timesAds != null" >
+        times_ads,
+      </if>
+      <if test="awardAds != null" >
+        award_ads,
+      </if>
+      <if test="awardTotal != null" >
+        award_total,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="day != null" >
+        #{day,jdbcType=DATE},
+      </if>
+      <if test="timesFast != null" >
+        #{timesFast,jdbcType=INTEGER},
+      </if>
+      <if test="awardFast != null" >
+        #{awardFast,jdbcType=INTEGER},
+      </if>
+      <if test="timesAds != null" >
+        #{timesAds,jdbcType=INTEGER},
+      </if>
+      <if test="awardAds != null" >
+        #{awardAds,jdbcType=INTEGER},
+      </if>
+      <if test="awardTotal != null" >
+        #{awardTotal,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ipeaksoft.moneyday.core.entity.StatDay" >
+    update tb_stat_day
+    <set >
+      <if test="day != null" >
+        day = #{day,jdbcType=DATE},
+      </if>
+      <if test="timesFast != null" >
+        times_fast = #{timesFast,jdbcType=INTEGER},
+      </if>
+      <if test="awardFast != null" >
+        award_fast = #{awardFast,jdbcType=INTEGER},
+      </if>
+      <if test="timesAds != null" >
+        times_ads = #{timesAds,jdbcType=INTEGER},
+      </if>
+      <if test="awardAds != null" >
+        award_ads = #{awardAds,jdbcType=INTEGER},
+      </if>
+      <if test="awardTotal != null" >
+        award_total = #{awardTotal,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ipeaksoft.moneyday.core.entity.StatDay" >
+    update tb_stat_day
+    set day = #{day,jdbcType=DATE},
+      times_fast = #{timesFast,jdbcType=INTEGER},
+      award_fast = #{awardFast,jdbcType=INTEGER},
+      times_ads = #{timesAds,jdbcType=INTEGER},
+      award_ads = #{awardAds,jdbcType=INTEGER},
+      award_total = #{awardTotal,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="findAllEarnings" resultType="Integer" parameterType="java.lang.Integer">
+  select sum(all_earnings) from tb_stat_day where task_type=#{task_type,jdbcType=INTEGER}
+  </select>
+</mapper>

@@ -1,0 +1,563 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ipeaksoft.moneyday.core.mapper.TaskFastMapper">
+	<resultMap id="BaseResultMap" type="com.ipeaksoft.moneyday.core.entity.TaskFast">
+		<id column="id" property="id" />
+		<result column="appid" property="appid" />
+		<result column="taskname" property="taskname" />
+		<result column="description" property="description" />
+		<result column="img" property="img" />
+		<result column="priority" property="priority" />
+		<result column="numorder" property="numorder" jdbcType="SMALLINT" />
+		<result column="download_url" property="downloadUrl" />
+		<result column="award" property="award" />
+		<result column="start_time" property="startTime" />
+		<result column="end_time" property="endTime" />
+		<result column="total" property="total" />
+		<result column="finished" property="finished" />
+		<result column="create_time" property="createTime" />
+		<result column="operator" property="operator" />
+		<result column="app_description" property="appDescription" />
+		<result column="show_start_time" property="showStartTime" />
+		<result column="show_end_time" property="showEndTime" />
+		<result column="show_numorder" property="showNumorder" />
+		<result column="type" property="type" />
+		<result column="task_type" property="taskType" />
+		<result column="statusName" property="statusName" />
+		<result column="key_word" property="keyWord" />
+		<result column="urlscheme" property="urlscheme" />
+		<result column="compare_type" property="compareType" />
+		<result column="limit" property="limit" />
+		<result column="size" property="size" />
+		<result column="search_order_num" property="searchOrderNum" />
+		<result column="task_source" property="taskSource" />
+		<result column="operate_step" property="operateStep" />
+		<result column="process_name" property="processName" />
+		<result column="ad_id" property="adId" />
+		<result column="channel_name" property="channelName" />
+		<result column="sdk_link" property="sdkLink" />
+		<result column="active_upload" property="activeUpload" />
+		<result column="ad_id2" property="adId2" />
+		<result column="duplicate" property="duplicate" />
+		<result column="xy_id" property="xyId" />
+	</resultMap>
+	<resultMap id="TaskFastCompleteInfo"
+		type="com.ipeaksoft.moneyday.core.entity.TaskFastCompleteInfo">
+		<id column="id" property="id" />
+		<result column="create_time" property="createTime" />
+		<result column="userid" property="userid" />
+		<result column="fromto" property="fromTo" />
+		<result column="type" property="type" />
+		<result column="idfa" property="idfa" />
+		<result column="name" property="name" />
+		<result column="mobile" property="mobile" />
+		<result column="province" property="province" />
+		<result column="province_name" property="provinceName" />
+		<result column="city" property="city" />
+		<result column="city_name" property="cityName" />
+		<result column="area" property="area" />
+		<result column="area_name" property="areaName" />
+		<result column="address" property="address" />
+	</resultMap>
+	<resultMap id="TaskFastSuveyMap"
+		type="com.ipeaksoft.moneyday.core.entity.QuickTaskSurvey">
+		<result column="rq" property="rq" />
+		<result column="ksrwwccs" property="ksrwwccs" />
+		<result column="cyrs" property="cyrs" />
+		<result column="xsyh" property="xsyh" />
+		<result column="xssy" property="xssy" />
+		<result column="xxyh" property="xxyh" />
+		<result column="xxsy" property="xxsy" />
+		<result column="drzsy" property="drzsy" />
+	</resultMap>
+
+	<resultMap id="TaskFastSuveyDetailMap"
+		type="com.ipeaksoft.moneyday.core.entity.QuickTaskSurveyDetail">
+		<result column="rq" property="rq" />
+		<result column="ksrwwccs" property="ksrwwccs" />
+		<result column="cyrs" property="cyrs" />
+		<result column="xsyh" property="xsyh" />
+		<result column="xssy" property="xssy" />
+		<result column="xxyh" property="xxyh" />
+		<result column="xxsy" property="xxsy" />
+		<result column="drzsy" property="drzsy" />
+	</resultMap>
+
+	<resultMap id="DictionaryMap" type="com.ipeaksoft.moneyday.core.dto.Dictionary">
+		<result column="id" property="id" />
+		<result column="key" property="key" />
+		<result column="value" property="value" />
+		<result column="description" property="description" />
+		<result column="type" property="type" />
+		<result column="create_time" property="createTime" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id,appid, taskname, task_source,description, img, priority, numorder,
+		download_url, award,duplicate,
+		start_time,xy_id,
+		end_time, total, finished,
+		create_time,urlscheme,compare_type,`limit`,size,task_source,operate_step,process_name,
+		operator,app_description,show_start_time,show_end_time,show_numorder,type,task_type,search_order_num,
+		key_word,ad_id,ad_id2,channel_name,sdk_link, active_upload
+		<![CDATA[ ,case when localtime()<start_time then '未开始' when (localtime()>start_time and localtime()<end_time) then '进行中' when (localtime()>=end_time) then '已结束' end statusName]]>
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from tb_task_fast
+		where id = #{id}
+	</select>
+	
+	<select id="selectByIds" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from tb_task_fast
+		where id IN
+	    <foreach item="id" index="index" collection="ids" open="(" separator="," close=")">
+			#{id}
+		</foreach>
+	</select>
+	
+	<select id="selectByAdId" parameterType="java.lang.String"
+		resultType="java.lang.String">
+		SELECT appid FROM tb_task_fast WHERE ad_id =
+		#{adId}
+		ORDER BY
+		create_time DESC LIMIT 1
+	</select>
+	
+	<select id="selectByAppid" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from tb_task_fast
+		where appid = #{appid}
+	</select>
+
+	<select id="selectAll" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tb_task_fast
+	</select>
+
+	<select id="findByWhere" resultMap="BaseResultMap"
+		parameterType="com.ipeaksoft.moneyday.core.entity.TaskFast">
+		select
+		<include refid="Base_Column_List" />
+		from tb_task_fast
+		where 1=1
+		<if test="taskname!=null and taskname!=''">
+		<![CDATA[ and taskname like CONCAT('%', '${taskname}' ,'%')]]>
+		</if>
+		<if test="searchFrom != null">
+         <![CDATA[ and create_time>=#{searchFrom} ]]>
+		</if>
+		<if test="searchEnd != null">
+       <![CDATA[  and create_time<= #{searchEnd} ]]>
+		</if>
+		ORDER BY
+
+		<if test="orderStr!=null">
+		<![CDATA[ ${orderStr} ]]>
+		</if>
+
+		create_time desc
+		<if test="currentPage !=null and pageSize != null">
+	    <![CDATA[  LIMIT #{currentPage,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER} ]]>
+		</if>
+	</select>
+	<select id="findCountByWhere" resultType="Integer"
+		parameterType="com.ipeaksoft.moneyday.core.entity.TaskFast">
+		select count(*) from tb_task_fast
+		where 1=1
+		<if test="taskname!=null and taskname!=''">
+		<![CDATA[ and taskname like CONCAT('%', '${taskname}' ,'%')]]>
+		</if>
+		<if test="searchFrom != null">
+         <![CDATA[ and create_time>=#{searchFrom} ]]>
+		</if>
+		<if test="searchEnd != null">
+       <![CDATA[  and create_time<= #{searchEnd} ]]>
+		</if>
+	</select>
+	<select id="findCompleteTask" resultMap="BaseResultMap"
+		parameterType="com.ipeaksoft.moneyday.core.entity.TaskFast">
+		select
+		<include refid="Base_Column_List" />
+		from tb_task_fast
+		where 1=1
+	<![CDATA[ and start_time<=#{searchFrom} and end_time>=#{searchFrom} and appid in  (select  appid from tb_user_task_fast_active where mobile=#{mobile} and status='1')  order by numorder asc ]]>
+		<!-- <if test="searchIdfa != null"> <![CDATA[ and start_time<=#{searchFrom} 
+			and end_time>=#{searchFrom} and id in (select task_id from tb_user_task_fast_active 
+			where idfa=#{searchIdfa}) ]]> </if> <if test="mobile != null"> <![CDATA[ 
+			and start_time<=#{searchFrom} and end_time>=#{searchFrom} and id in (select 
+			task_id from tb_user_task_fast_active where mobile=#{mobile}) ]]> </if> -->
+	</select>
+
+	<select id="findAllTask" resultMap="BaseResultMap"
+		parameterType="com.ipeaksoft.moneyday.core.entity.TaskFast">
+		select
+		<include refid="Base_Column_List" />
+		from tb_task_fast
+		where 1=1
+		<if test="searchIdfa != null and searchIdfa != ''">
+          <![CDATA[ 
+          	and start_time<=#{searchFrom} and end_time>=#{searchFrom}  order by numorder asc ]]>
+			<!-- and id in (select task_id from tb_user_task_fast_click where idfa=#{searchIdfa}) -->
+		</if>
+		<if test="mobile != null and mobile != ''">
+       <![CDATA[ and start_time<=#{searchFrom} and end_time>=#{searchFrom}  order by numorder asc ]]>
+			<!-- and id in (select task_id from tb_user_task_fast_click where mobile=#{mobile}) -->
+		</if>
+	</select>
+
+	<select id="findNotBeginningTask" resultMap="BaseResultMap"
+		parameterType="com.ipeaksoft.moneyday.core.entity.TaskFast">
+		select
+		<include refid="Base_Column_List" />
+		from tb_task_fast
+		where 1=1
+		<if test="searchIdfa != null">
+          <![CDATA[ and start_time>#{searchFrom}  order by show_numorder asc ]]>
+		</if>
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from
+		tb_task_fast
+		where id = #{id}
+	</delete>
+	<insert id="insert" parameterType="com.ipeaksoft.moneyday.core.entity.TaskFast">
+		insert into tb_task_fast (id,
+		appid,taskname, description, img,
+		priority, numorder,download_url,
+		award, start_time, end_time, total, finished, create_time,
+		operator,app_description,show_start_time,show_end_time,show_numorder,
+		task_type,key_word,search_order_num,type,urlscheme,compare_type,`limit`,size,
+		task_source,operate_step,process_name,ad_id,ad_id2,channel_name, sdk_link, active_upload,duplicate,
+		xy_id)
+		values (#{id},
+		#{appid},#{taskname}, #{description}, #{img},
+		#{priority}, #{numorder},
+		#{downloadUrl}, #{award}, #{startTime},
+		#{endTime}, #{total},
+		#{finished},
+		#{createTime}, #{operator},
+		#{appDescription},
+		#{showStartTime},
+		#{showEndTime},
+		#{showNumorder},#{taskType},#{keyWord},#{searchOrderNum},
+		#{type},#{urlscheme},#{compareType},#{limit},#{size},#{taskSource},
+		#{operateStep},#{processName},#{adId},#{adId2},#{channelName},#{sdkLink},#{activeUpload},#{duplicate},
+		#{xyId})
+	</insert>
+	<insert id="insertGetId" parameterType="com.ipeaksoft.moneyday.core.entity.TaskFast"  useGeneratedKeys="true" keyProperty="id">
+		insert into tb_task_fast (
+		appid,taskname, description, img,
+		priority, numorder,
+		download_url,
+		award, start_time, end_time, total, finished, create_time,
+		operator,app_description,show_start_time,show_end_time,show_numorder,
+		task_type,key_word,search_order_num,type,urlscheme,compare_type,`limit`,size,
+		task_source,operate_step,process_name,ad_id,ad_id2,channel_name,sdk_link, active_upload,duplicate,
+		xy_id)
+		values (
+		#{appid},#{taskname}, #{description}, #{img},
+		#{priority}, #{numorder},
+		#{downloadUrl}, #{award}, #{startTime},
+		#{endTime}, #{total},
+		#{finished},
+		#{createTime}, #{operator},
+		#{appDescription},
+		#{showStartTime},
+		#{showEndTime},
+		#{showNumorder},#{taskType},#{keyWord},#{searchOrderNum},
+		#{type},#{urlscheme},#{compareType},#{limit},#{size},#{taskSource},
+		#{operateStep},#{processName},#{adId},#{adId2},#{channelName},#{sdkLink},#{activeUpload},#{duplicate},
+		#{xyId})
+	</insert>
+
+	<update id="updateByPrimaryKeySelective" parameterType="com.ipeaksoft.moneyday.core.entity.TaskFast">
+		update tb_task_fast
+		<set>
+			<if test="taskname != null">
+				taskname = #{taskname},
+			</if>
+			<if test="appid != null">
+				appid,
+			</if>
+			<if test="description != null">
+				description = #{description},
+			</if>
+			<if test="img != null">
+				img = #{img},
+			</if>
+			<if test="priority != null">
+				priority = #{priority},
+			</if>
+			<if test="numorder != null">
+				numorder = #{numorder},
+			</if>
+			<if test="downloadUrl != null">
+				download_url = #{downloadUrl},
+			</if>
+			<if test="award != null">
+				award = #{award},
+			</if>
+			<if test="startTime != null">
+				start_time = #{startTime},
+			</if>
+			<if test="endTime != null">
+				end_time = #{endTime},
+			</if>
+			<if test="total != null">
+				total = #{total},
+			</if>
+			<if test="finished != null">
+				finished = #{finished},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime},
+			</if>
+			<if test="operator != null">
+				operator = #{operator},
+			</if>
+			<if test="appDescription != null">
+				app_description = #{appDescription},
+			</if>
+			<if test="showStartTime != null">
+				show_start_time = #{showStartTime},
+			</if>
+			<if test="showEndTime != null">
+				show_end_time = #{showEndTime},
+			</if>
+			<if test="showNumorder != null">
+				show_numorder = #{showNumorder},
+			</if>
+			<if test="searchOrderNum != null">
+				search_order_num = #{searchOrderNum},
+			</if>
+			<if test="keyWord != null">
+				key_word = #{keyWord},
+			</if>
+			<if test="urlscheme != null">
+				urlscheme = #{urlscheme},
+			</if>
+			<if test="taskSource != null">
+				task_source = #{taskSource},
+			</if>
+			<if test="operateStep != null">
+				operate_step = #{operateStep},
+			</if>
+			<if test="processName != null">
+				process_name = #{processName},
+			</if>
+			<if test="adId != null">
+				ad_id = #{adId},
+			</if>
+			<if test="adId2 != null">
+				ad_id2 = #{adId2},
+			</if>
+			<if test="channelName != null">
+				channel_name = #{channelName},
+			</if>
+			<if test="sdkLink != null">
+				sdk_link = #{sdkLink},
+			</if>
+			<if test="activeUpload != null">
+				active_upload = #{activeUpload},
+			</if>
+			<if test="duplicate != null">
+				duplicate=#{duplicate},
+			</if>
+			<if test="xyId != null">
+				xy_id=#{xyId},
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.ipeaksoft.moneyday.core.entity.TaskFast">
+		update
+		tb_task_fast
+		set taskname = #{taskname},
+		appid=#{appid},
+		description = #{description},
+		img = #{img},
+		priority = #{priority},
+		numorder = #{numorder},
+		download_url = #{downloadUrl},
+		award = #{award},
+		start_time = #{startTime},
+		end_time = #{endTime},
+		total = #{total},
+		finished =#{finished},
+		create_time = #{createTime},
+		operator = #{operator},
+		app_description = #{appDescription},
+		show_start_time =#{showStartTime},
+		show_end_time = #{showEndTime},
+		show_numorder = #{showNumorder},
+		type=#{type},
+		task_type=#{taskType},
+		search_order_num=#{searchOrderNum},
+		key_word=#{keyWord},
+		urlscheme=#{urlscheme},
+		compare_type=#{compareType},
+		`limit`=#{limit},
+		size=#{size},
+		task_source=#{taskSource},
+		operate_step=#{operateStep},
+		process_name=#{processName},
+		ad_id=#{adId},
+		ad_id2=#{adId2},
+		channel_name=#{channelName},
+		sdk_link=#{sdkLink},
+		duplicate=#{duplicate},
+		active_upload=#{activeUpload},
+		xy_id=#{xyId}
+		where id = #{id}
+	</update>
+	<!-- 统计某天某个任务的完成情况 -->
+	<select id="findPageListTaskCompleteInfo" resultMap="TaskFastCompleteInfo"
+		parameterType="java.util.Map">
+		select
+		u.id,
+		t.create_time,
+		u.userid,
+		u.fromto,
+		u.type,
+		u.idfa,
+		u.name,
+		u.mobile,
+		u.province,
+		a1.area_name province_name,
+		u.city,
+		a2.area_name
+		city_name,
+		u.area,
+		a3.area_name,
+		u.address
+		from
+		tb_user_task_fast t
+		left
+		join
+		tb_user u ON t.mobile = u.mobile
+		left join
+		areas a1 ON u.province =
+		a1.id
+		left join
+		areas a2 ON u.city = a2.id
+		left join
+		areas a3 ON u.area =
+		a3.id
+		where
+		t.task_id = #{taskId,jdbcType=BIGINT}
+		and
+		date_format(t.create_time, '%Y-%m-%d') = #{day,jdbcType=DATE}
+		order by
+		t.create_time desc
+		<if test="currentPage !=null and pageSize != null">
+	    <![CDATA[  LIMIT #{currentPage,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER} ]]>
+		</if>
+	</select>
+	<!-- 统计某天某个任务的完成情况 -->
+	<select id="findPageListTaskCompleteInfoCount" resultType="Integer"
+		parameterType="java.util.Map">
+		select
+		count(1)
+		from
+		tb_user_task_fast t
+		left join
+		tb_user u
+		ON t.mobile = u.mobile
+		left join
+		areas a1 ON u.province = a1.id
+		left join
+		areas a2 ON u.city = a2.id
+		left join
+		areas a3 ON u.area = a3.id
+		where
+		t.task_id = #{taskId,jdbcType=BIGINT}
+		and date_format(t.create_time,
+		'%Y-%m-%d') = #{day,jdbcType=DATE}
+	</select>
+
+	<update id="addFinished">
+		update tb_task_fast
+		set finished = finished + 1
+		where
+		id = #{id}
+	</update>
+
+	<update id="reduceFinished">
+		update tb_task_fast
+		set finished = finished - 1
+		where
+		id = #{id}
+	</update>
+
+	<update id="addFinishedByAppid">
+		update tb_task_fast
+		set finished = finished + 1
+		where
+		appid = #{appid}
+	</update>
+
+	<update id="reduceFinishedByAppid">
+		update tb_task_fast
+		set finished = finished - 1
+		where
+		appid = #{appid}
+	</update>
+
+	<select id="listALLBeginedTaskNew" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tb_task_fast
+		<![CDATA[ WHERE task_type < 100 AND start_time<=NOW() AND end_time > NOW() AND (priority = 0 or priority = #{priority}) ORDER BY
+		numorder ASC, create_time DESC  ]]>
+	</select>
+
+	<select id="listDoingBeginedTask" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		SELECT t.appid, c.`create_time`
+		FROM tb_task_fast t,
+		tb_user_task_fast_click c
+		<![CDATA[ WHERE t.`appid` = c.`appid` AND task_type < 100 AND start_time<=NOW() AND end_time > NOW() AND
+		c.mobile=#{mobile} AND (priority = 0 or priority = #{priority})
+		ORDER BY t.numorder ASC, t.create_time DESC ]]>
+	</select>
+
+	<select id="listCompleteBeginedTaskNew" resultType="string"
+		parameterType="java.util.Map">
+		select distinct appid
+		from tb_task_fast
+		<![CDATA[ where task_type < 100 and start_time<=NOW() AND end_time > NOW() and appid in (select appid from
+		tb_user_task_fast_active where mobile=#{mobile} AND status='1' AND client_type=1) AND (priority = 0 or priority = #{priority}) order
+		by numorder ASC, create_time DESC ]]>
+	</select>
+
+	<select id="listALLNoBegingingTaskNew" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tb_task_fast
+	    <![CDATA[  where start_time > now() AND task_type < 100  AND (priority = 0 or priority = #{priority}) order by numorder ASC, create_time DESC ]]>
+	</select>
+
+	<select id="listChannelTask" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM tb_task_fast
+	    <![CDATA[  WHERE channel_name=#{channelName } AND task_type > 100 AND start_time<=NOW() AND end_time > NOW() ORDER BY create_time DESC ]]>
+	</select>
+
+	<select id="listDictionary" parameterType="java.lang.Integer"
+		resultMap="DictionaryMap">
+		select * from tb_dictionary
+	    <![CDATA[  where type=#{type } order by create_time ]]>
+	</select>
+
+</mapper>

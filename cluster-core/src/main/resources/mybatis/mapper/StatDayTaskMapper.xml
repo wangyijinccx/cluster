@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ipeaksoft.moneyday.core.mapper.StatDayTaskMapper" >
+  <resultMap id="BaseResultMap" type="com.ipeaksoft.moneyday.core.entity.StatDayTask" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="day" property="day" jdbcType="DATE" />
+    <result column="type" property="type" jdbcType="TINYINT" />
+    <result column="task_id" property="taskId" jdbcType="BIGINT" />
+    <result column="task_name" property="taskName" />
+     <result column="publish_num" property="publishNum" jdbcType="BIGINT" />
+    <result column="comp_num" property="compNum" jdbcType="BIGINT" />
+    <result column="price" property="price" jdbcType="BIGINT" />
+    <result column="off_a_user" property="offaUser" jdbcType="BIGINT" />
+    <result column="on_b_user" property="onbUser" jdbcType="BIGINT" />
+    <result column="off_b_user" property="offbUser" jdbcType="BIGINT" />
+    <result column="on_c_user" property="oncUser" jdbcType="BIGINT" />
+    <result column="off_c_user" property="offcUser" jdbcType="BIGINT" />
+    <result column="on_d_user" property="ondUser" jdbcType="BIGINT" />
+    <result column="off_d_user" property="offdUser" jdbcType="BIGINT" />
+    <result column="comp" property="comp" jdbcType="INTEGER" />
+    <result column="award" property="award" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, day, type, task_id,task_name,publish_num,price,comp_num,off_a_user, on_b_user,off_b_user,on_c_user,off_c_user,on_d_user,off_d_user,comp, award, create_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_stat_day_task
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_stat_day_task
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.ipeaksoft.moneyday.core.entity.StatDayTask" >
+    insert into tb_stat_day_task (id, day, type, task_id, 
+      comp, award, create_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{day,jdbcType=DATE}, #{type,jdbcType=TINYINT}, #{taskId,jdbcType=BIGINT}, 
+      #{comp,jdbcType=INTEGER}, #{award,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ipeaksoft.moneyday.core.entity.StatDayTask" >
+    insert into tb_stat_day_task
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="day != null" >
+        day,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="taskId != null" >
+        task_id,
+      </if>
+      <if test="comp != null" >
+        comp,
+      </if>
+      <if test="award != null" >
+        award,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="day != null" >
+        #{day,jdbcType=DATE},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=TINYINT},
+      </if>
+      <if test="taskId != null" >
+        #{taskId,jdbcType=BIGINT},
+      </if>
+      <if test="comp != null" >
+        #{comp,jdbcType=INTEGER},
+      </if>
+      <if test="award != null" >
+        #{award,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ipeaksoft.moneyday.core.entity.StatDayTask" >
+    update tb_stat_day_task
+    <set >
+      <if test="day != null" >
+        day = #{day,jdbcType=DATE},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=TINYINT},
+      </if>
+      <if test="taskId != null" >
+        task_id = #{taskId,jdbcType=BIGINT},
+      </if>
+      <if test="comp != null" >
+        comp = #{comp,jdbcType=INTEGER},
+      </if>
+      <if test="award != null" >
+        award = #{award,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ipeaksoft.moneyday.core.entity.StatDayTask" >
+    update tb_stat_day_task
+    set day = #{day,jdbcType=DATE},
+      type = #{type,jdbcType=TINYINT},
+      task_id = #{taskId,jdbcType=BIGINT},
+      comp = #{comp,jdbcType=INTEGER},
+      award = #{award,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="findPageList" parameterType="java.util.Map" resultMap="BaseResultMap">
+  select 
+  <include refid="Base_Column_List" />
+  from tb_stat_day_task where day=#{day,jdbcType=DATE} order by create_time desc
+  <if test="currentPage !=null and pageSize != null">
+     <![CDATA[  LIMIT #{currentPage,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER} ]]>
+    </if>
+  </select>
+  <select id="findPageListCount" parameterType="java.util.Map" resultType="INTEGER">
+  select 
+  count(1)
+  from tb_stat_day_task where day=#{day,jdbcType=DATE} 
+  
+  </select>
+</mapper>

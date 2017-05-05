@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ipeaksoft.moneyday.core.mapper.ClusterGameAccountMapper" >
+  <resultMap id="BaseResultMap" type="com.ipeaksoft.moneyday.core.entity.ClusterGameAccount" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="game_id" property="gameId" jdbcType="INTEGER" />
+    <result column="account" property="account" jdbcType="VARCHAR" />
+    <result column="passwd" property="passwd" jdbcType="VARCHAR" />
+    <result column="game_server" property="gameServer" jdbcType="VARCHAR" />
+    <result column="run_time" property="runTime" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="modify_time" property="modifyTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, game_id, account, passwd, game_server, run_time, create_time, modify_time, status
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_cluster_game_account
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tb_cluster_game_account
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.ipeaksoft.moneyday.core.entity.ClusterGameAccount" >
+    insert into tb_cluster_game_account (id, game_id, account, 
+      passwd, game_server, run_time, 
+      create_time, modify_time, status
+      )
+    values (#{id,jdbcType=INTEGER}, #{gameId,jdbcType=INTEGER}, #{account,jdbcType=VARCHAR}, 
+      #{passwd,jdbcType=VARCHAR}, #{gameServer,jdbcType=VARCHAR}, #{runTime,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{modifyTime,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ipeaksoft.moneyday.core.entity.ClusterGameAccount" >
+    insert into tb_cluster_game_account
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="gameId != null" >
+        game_id,
+      </if>
+      <if test="account != null" >
+        account,
+      </if>
+      <if test="passwd != null" >
+        passwd,
+      </if>
+      <if test="gameServer != null" >
+        game_server,
+      </if>
+      <if test="runTime != null" >
+        run_time,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="modifyTime != null" >
+        modify_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="gameId != null" >
+        #{gameId,jdbcType=INTEGER},
+      </if>
+      <if test="account != null" >
+        #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="passwd != null" >
+        #{passwd,jdbcType=VARCHAR},
+      </if>
+      <if test="gameServer != null" >
+        #{gameServer,jdbcType=VARCHAR},
+      </if>
+      <if test="runTime != null" >
+        #{runTime,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null" >
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ipeaksoft.moneyday.core.entity.ClusterGameAccount" >
+    update tb_cluster_game_account
+    <set >
+      <if test="gameId != null" >
+        game_id = #{gameId,jdbcType=INTEGER},
+      </if>
+      <if test="account != null" >
+        account = #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="passwd != null" >
+        passwd = #{passwd,jdbcType=VARCHAR},
+      </if>
+      <if test="gameServer != null" >
+        game_server = #{gameServer,jdbcType=VARCHAR},
+      </if>
+      <if test="runTime != null" >
+        run_time = #{runTime,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyTime != null" >
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ipeaksoft.moneyday.core.entity.ClusterGameAccount" >
+    update tb_cluster_game_account
+    set game_id = #{gameId,jdbcType=INTEGER},
+      account = #{account,jdbcType=VARCHAR},
+      passwd = #{passwd,jdbcType=VARCHAR},
+      game_server = #{gameServer,jdbcType=VARCHAR},
+      run_time = #{runTime,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+	<select id="selectListGameAccont" resultType="java.util.HashMap">
+		SELECT * from (
+		select cg.`name` name ,count(*) num ,cga.game_id id
+		from
+		tb_cluster_game_account cga
+		LEFT JOIN tb_cluster_game cg on
+		cga.game_id
+		= cg.id
+		GROUP BY cga.game_id ) A
+		<if test="currentPage !=null and pageSize != null">
+	      <![CDATA[  LIMIT #{currentPage},#{pageSize} ]]>
+		</if>
+	</select>
+
+	<select id="selectNum" resultType="int">
+		SELECT count(*) from (
+		select
+		cg.`name` ,count(*) from tb_cluster_game_account cga
+		LEFT JOIN
+		tb_cluster_game cg on cga.game_id = cg.id
+		GROUP BY cga.game_id ) A
+	</select>
+
+	<select id="selectByGameId" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from tb_cluster_game_account
+		where game_id = #{id,jdbcType=INTEGER}
+		<if test="currentPage !=null and pageSize != null">
+	      <![CDATA[  LIMIT #{currentPage},#{pageSize} ]]>
+		</if>
+	</select>
+
+	<select id="selectByGameIdNum" resultType="int" parameterType="java.lang.Integer">
+		select
+		count(*)
+		from tb_cluster_game_account
+		where game_id
+		=
+		#{id,jdbcType=INTEGER}
+	</select>
+
+	<select id="selectAccount" resultType="java.util.HashMap"
+		parameterType="java.lang.Integer">
+		select tcg.`name` , tcga.* from tb_cluster_game_account
+		tcga
+		LEFT JOIN tb_cluster_game tcg on tcga.game_id = tcg.id
+		where
+		tcga.game_id
+		= #{id,jdbcType=INTEGER}
+	</select>
+
+
+	<insert id="insertGameAccount" parameterType="java.util.List">
+		insert into tb_cluster_game_account
+		(game_id,account,passwd,game_server,run_time,create_time,modify_time)
+		values
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{item.gameId,jdbcType=INTEGER},
+			#{item.account,jdbcType=VARCHAR},
+			#{item.passwd,jdbcType=VARCHAR},
+			#{item.gameServer,jdbcType=VARCHAR},
+			#{item.runTime,jdbcType=INTEGER},
+			#{item.createTime,jdbcType=TIMESTAMP},
+			#{item.modifyTime,jdbcType=TIMESTAMP})
+		</foreach>
+	</insert>
+	<update id="updateStatus">
+	     update tb_cluster_game_account set `status` = 1
+    </update>
+    <select id="selectByIds" resultMap="BaseResultMap" parameterType="java.util.List">
+	    select 
+	    <include refid="Base_Column_List" />
+	    from tb_cluster_game_account
+	    WHERE id in 
+	    <foreach collection="ids" item="id" open="(" close=")"
+	    separator=",">
+	    #{id,jdbcType=INTEGER}
+	    </foreach>
+    </select>
+    <select id="selectGames" resultType="java.util.HashMap" parameterType="java.util.Map">
+	    select *  from tb_cluster_game_account tcga
+        LEFT JOIN tb_cluster_game tcg on tcg.id = tcga.game_id
+	    where tcg.bundleId = #{gameid,jdbcType=VARCHAR} and tcga.account=#{account,jdbcType=VARCHAR}
+	     and tcga.game_server = #{server,jdbcType=VARCHAR}
+	</select>
+	
+	<select id="checkGames" resultMap="BaseResultMap" parameterType="java.util.Map">
+	    select 
+	     <include refid="Base_Column_List" />
+	    from tb_cluster_game_account tcga
+	    where tcga.game_id = #{gameid,jdbcType=INTEGER} and tcga.account=#{account,jdbcType=VARCHAR}
+	     and tcga.game_server = #{server,jdbcType=VARCHAR}
+	</select>
+    
+    
+</mapper>

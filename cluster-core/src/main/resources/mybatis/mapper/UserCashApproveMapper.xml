@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ipeaksoft.moneyday.core.mapper.UserCashApproveMapper">
+	<resultMap id="BaseResultMap"
+		type="com.ipeaksoft.moneyday.core.entity.UserCashApprove">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<result column="orderid" property="orderid" jdbcType="VARCHAR" />
+		<result column="ordernum" property="ordernum" jdbcType="VARCHAR" />
+		<result column="result" property="result" jdbcType="VARCHAR" />
+		<result column="description" property="description" jdbcType="VARCHAR" />
+		<result column="operator" property="operator" jdbcType="INTEGER" />
+		<result column="approve_time" property="approveTime" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, orderid, ordernum, result, description, operator, approve_time
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from tb_user_cash_approve
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<select id="selectPageByOrder" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM tb_user_cash_approve
+		WHERE ordernum = #{ordernum,jdbcType=VARCHAR}
+		<if test="from != null and from != ''">
+			<![CDATA[  AND date(approve_time) >= #{from,jdbcType=VARCHAR} ]]>
+		</if>
+		<if test="to!=null and to != ''">
+			<![CDATA[  AND date(approve_time)<= #{to,jdbcType=VARCHAR} ]]>
+		</if>
+		ORDER
+		BY approve_time
+		<if test="dir!=null and dir == 'desc'">
+			DESC
+		</if>
+		<if test="start !=null and size != null">
+	    <![CDATA[ LIMIT #{start,jdbcType=INTEGER},#{size,jdbcType=INTEGER} ]]>
+		</if>
+	</select>
+	<select id="countPageByOrder" resultType="java.lang.Integer"
+		parameterType="java.util.Map">
+		SELECT count(*)
+		FROM tb_user_cash_approve
+		WHERE ordernum = #{ordernum,jdbcType=VARCHAR}
+		<if test="from != null and from != ''">
+			<![CDATA[  AND date(approve_time) >= #{from,jdbcType=VARCHAR} ]]>
+		</if>
+		<if test="to!=null and to != ''">
+			<![CDATA[  AND date(approve_time)<= #{to,jdbcType=VARCHAR} ]]>
+		</if>
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+		delete from tb_user_cash_approve
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert" parameterType="com.ipeaksoft.moneyday.core.entity.UserCashApprove">
+		insert into tb_user_cash_approve (id, orderid, ordernum, result,
+		description, operator, approve_time
+		)
+		values (#{id,jdbcType=BIGINT}, #{orderid,jdbcType=VARCHAR},
+		#{ordernum,jdbcType=VARCHAR}, #{result,jdbcType=VARCHAR},
+		#{description,jdbcType=VARCHAR}, #{operator,jdbcType=INTEGER},
+		#{approveTime,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="com.ipeaksoft.moneyday.core.entity.UserCashApprove">
+		insert into tb_user_cash_approve
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="orderid != null">
+				orderid,
+			</if>
+			<if test="ordernum != null">
+				ordernum,
+			</if>
+			<if test="result != null">
+				result,
+			</if>
+			<if test="description != null">
+				description,
+			</if>
+			<if test="operator != null">
+				operator,
+			</if>
+			<if test="approveTime != null">
+				approve_time,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=BIGINT},
+			</if>
+			<if test="orderid != null">
+				#{orderid,jdbcType=VARCHAR},
+			</if>
+			<if test="ordernum != null">
+				#{ordernum,jdbcType=VARCHAR},
+			</if>
+			<if test="result != null">
+				#{result,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				#{description,jdbcType=VARCHAR},
+			</if>
+			<if test="operator != null">
+				#{operator,jdbcType=INTEGER},
+			</if>
+			<if test="approveTime != null">
+				#{approveTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ipeaksoft.moneyday.core.entity.UserCashApprove">
+		update tb_user_cash_approve
+		<set>
+			<if test="orderid != null">
+				orderid = #{orderid,jdbcType=VARCHAR},
+			</if>
+			<if test="ordernum != null">
+				ordernum = #{ordernum,jdbcType=VARCHAR},
+			</if>
+			<if test="result != null">
+				result = #{result,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				description = #{description,jdbcType=VARCHAR},
+			</if>
+			<if test="operator != null">
+				operator = #{operator,jdbcType=INTEGER},
+			</if>
+			<if test="approveTime != null">
+				approve_time = #{approveTime,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.ipeaksoft.moneyday.core.entity.UserCashApprove">
+		update tb_user_cash_approve
+		set orderid = #{orderid,jdbcType=VARCHAR},ordernum =
+		#{ordernum,jdbcType=VARCHAR},
+		result = #{result,jdbcType=VARCHAR},
+		description = #{description,jdbcType=VARCHAR},
+		operator = #{operator,jdbcType=INTEGER},
+		approve_time = #{approveTime,jdbcType=TIMESTAMP}
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+</mapper>

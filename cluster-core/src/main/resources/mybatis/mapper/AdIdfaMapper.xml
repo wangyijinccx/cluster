@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ipeaksoft.moneyday.core.mapper.AdIdfaMapper">
+	<resultMap id="BaseResultMap"
+		type="com.ipeaksoft.moneyday.core.entity.AdIdfa">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="idfa" property="idfa" jdbcType="VARCHAR" />
+		<result column="appid" property="appid" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="findAbIdfaByAbAndIdfa" parameterType="com.ipeaksoft.moneyday.core.entity.AdIdfa"
+		resultMap="BaseResultMap">
+		select * from tb_ads_idfa 
+		where idfa = #{idfa,jdbcType=VARCHAR} 
+		and appid = #{appid,jdbcType=VARCHAR}
+	</select>
+</mapper>

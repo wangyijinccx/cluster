@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ipeaksoft.moneyday.core.mapper.UserTaskAdsActiveMapper" >
+  <resultMap id="BaseResultMap" type="com.ipeaksoft.moneyday.core.entity.UserTaskAdsActive" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+    <result column="idfa" property="idfa" jdbcType="VARCHAR" />
+    <result column="union_name" property="unionName" jdbcType="VARCHAR" />
+    <result column="appid" property="appid" jdbcType="VARCHAR" />
+    <result column="appname" property="appname" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="ads_award" property="adsAward" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="CHAR" />
+    <result column="award" property="award" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, mobile, idfa, union_name, appid, appname, create_time, description, ads_award, 
+    status, award
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_user_task_ads_active
+    where id = #{id}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from tb_user_task_ads_active
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.ipeaksoft.moneyday.core.entity.UserTaskAdsActive" >
+  	<selectKey resultType="long" order="AFTER" keyProperty="id">
+		SELECT LAST_INSERT_ID() AS id
+	</selectKey>
+    insert into tb_user_task_ads_active (id, mobile, idfa, 
+      union_name, appid, appname, 
+      create_time, description, ads_award, 
+      status, award)
+    values (#{id}, #{mobile}, #{idfa}, 
+      #{unionName}, #{appid}, #{appname}, 
+      #{createTime}, #{description}, #{adsAward}, 
+      #{status}, #{award})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ipeaksoft.moneyday.core.entity.UserTaskAdsActive" >
+    insert into tb_user_task_ads_active
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="idfa != null" >
+        idfa,
+      </if>
+      <if test="unionName != null" >
+        union_name,
+      </if>
+      <if test="appid != null" >
+        appid,
+      </if>
+      <if test="appname != null" >
+        appname,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="adsAward != null" >
+        ads_award,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="award != null" >
+        award,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="mobile != null" >
+        #{mobile},
+      </if>
+      <if test="idfa != null" >
+        #{idfa},
+      </if>
+      <if test="unionName != null" >
+        #{unionName},
+      </if>
+      <if test="appid != null" >
+        #{appid},
+      </if>
+      <if test="appname != null" >
+        #{appname},
+      </if>
+      <if test="createTime != null" >
+        #{createTime},
+      </if>
+      <if test="description != null" >
+        #{description},
+      </if>
+      <if test="adsAward != null" >
+        #{adsAward},
+      </if>
+      <if test="status != null" >
+        #{status},
+      </if>
+      <if test="award != null" >
+        #{award},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ipeaksoft.moneyday.core.entity.UserTaskAdsActive" >
+    update tb_user_task_ads_active
+    <set >
+      <if test="mobile != null" >
+        mobile = #{mobile},
+      </if>
+      <if test="idfa != null" >
+        idfa = #{idfa},
+      </if>
+      <if test="unionName != null" >
+        union_name = #{unionName},
+      </if>
+      <if test="appid != null" >
+        appid = #{appid},
+      </if>
+      <if test="appname != null" >
+        appname = #{appname},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="description != null" >
+        description = #{description},
+      </if>
+      <if test="adsAward != null" >
+        ads_award = #{adsAward},
+      </if>
+      <if test="status != null" >
+        status = #{status},
+      </if>
+      <if test="award != null" >
+        award = #{award},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ipeaksoft.moneyday.core.entity.UserTaskAdsActive" >
+    update tb_user_task_ads_active
+    set mobile = #{mobile},
+      idfa = #{idfa},
+      union_name = #{unionName},
+      appid = #{appid},
+      appname = #{appname},
+      create_time = #{createTime},
+      description = #{description},
+      ads_award = #{adsAward},
+      status = #{status},
+      award = #{award}
+    where id = #{id}
+  </update>
+</mapper>

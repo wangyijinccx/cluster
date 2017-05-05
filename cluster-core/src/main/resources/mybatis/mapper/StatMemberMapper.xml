@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ipeaksoft.moneyday.core.mapper.StatMemberMapper">
+	<resultMap type="com.ipeaksoft.moneyday.core.entity.StatMember"
+		id="BaseResultMap">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="day" property="day" jdbcType="DATE" />
+		<result column="offline_a_time" property="offline_a_time"
+			jdbcType="INTEGER" />
+		<result column="offline_a_earnings" property="offline_a_earnings"
+			jdbcType="INTEGER" />
+		<result column="offline_b_time" property="offline_b_time"
+			jdbcType="INTEGER" />
+		<result column="offline_b_earnings" property="offline_b_earnings"
+			jdbcType="INTEGER" />
+		<result column="offline_c_time" property="offline_c_time"
+			jdbcType="INTEGER" />
+		<result column="offline_c_earnings" property="offline_c_earnings"
+			jdbcType="INTEGER" />
+		<result column="offline_d_time" property="offline_d_time"
+			jdbcType="INTEGER" />
+		<result column="offline_d_earnings" property="offline_d_earnings"
+			jdbcType="INTEGER" />
+		<result column="online_b_time" property="online_b_time"
+			jdbcType="INTEGER" />
+		<result column="online_b_earnings" property="online_b_earnings"
+			jdbcType="INTEGER" />
+		<result column="online_c_time" property="online_c_time"
+			jdbcType="INTEGER" />
+		<result column="online_c_earnings" property="online_c_earnings"
+			jdbcType="INTEGER" />
+		<result column="online_d_time" property="online_d_time"
+			jdbcType="INTEGER" />
+		<result column="online_d_earnings" property="online_d_earnings"
+			jdbcType="INTEGER" />
+		<result column="create_time" property="create_time" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<select id="findPageList" resultMap="BaseResultMap"
+		parameterType="java.util.Map">
+		select * from st_stat_member where 1=1 
+		<if test="startDate!=null">
+		<![CDATA[ and day>=#{startDate}]]>
+		</if>
+		<if test="endDate!=null">
+		<![CDATA[ and day<=#{endDate}]]>
+		</if>
+		 order by create_time desc
+		<if test="currentPage !=null and pageSize != null">
+     		<![CDATA[  LIMIT #{currentPage,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER} ]]>
+		</if>
+	</select>
+	<select id="findPageListCount" resultType="Integer"
+		parameterType="java.util.Map">
+		select count(1) from st_stat_member  where 1=1 
+		<if test="startDate!=null">
+		<![CDATA[ and day>=#{startDate}]]>
+		</if>
+		<if test="endDate!=null">
+		<![CDATA[ and day<=#{endDate}]]>
+		</if>
+		
+	</select>
+</mapper>

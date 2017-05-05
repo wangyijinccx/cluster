@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ipeaksoft.moneyday.core.mapper.UserLoginExceptionMapper">
+	<resultMap id="BaseResultMap"
+		type="com.ipeaksoft.moneyday.core.entity.UserLoginException">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="moblie" jdbcType="VARCHAR" property="moblie" />
+		<result column="city" jdbcType="VARCHAR" property="city" />
+		<result column="province" jdbcType="VARCHAR" property="province" />
+		<result column="region" jdbcType="VARCHAR" property="region" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="apple_id" jdbcType="VARCHAR" property="appleId" />
+		<result column="idfa" jdbcType="VARCHAR" property="idfa" />
+		<result column="process_time" jdbcType="TIMESTAMP" property="processTime" />
+		<result column="operator" jdbcType="INTEGER" property="operator" />
+		<result column="client_type" property="clientType" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="operator" jdbcType="INTEGER" property="operator" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, moblie, city, province, region, create_time, apple_id,
+		idfa,process_time,operator,client_type,status
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Long"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tb_user_login_exception
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+
+	<select id="selectByMobile" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tb_user_login_exception
+		where moblie = #{mobile} order by create_time
+		DESC
+	</select>
+	
+	<select id="selectUnProcessByMobile" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tb_user_login_exception
+		where moblie = #{mobile} and process_time is null order by create_time
+		DESC
+	</select>
+	<select id="selectByMobileAndIdfa"
+		parameterType="com.ipeaksoft.moneyday.core.entity.UserLoginException"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from tb_user_login_exception
+		where moblie = #{moblie} and idfa=#{idfa}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from
+		tb_user_login_exception
+		where id = #{id,jdbcType=BIGINT}
+	</delete>
+	<insert id="insert"
+		parameterType="com.ipeaksoft.moneyday.core.entity.UserLoginException">
+		insert into tb_user_login_exception (id, moblie, city,
+		province, region, create_time,
+		apple_id,
+		idfa,operator,process_time,client_type,status)
+		values
+		(#{id,jdbcType=BIGINT}, #{moblie,jdbcType=VARCHAR},
+		#{city,jdbcType=VARCHAR},
+		#{province,jdbcType=VARCHAR},
+		#{region,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+		#{appleId,jdbcType=VARCHAR}, #{idfa,jdbcType=VARCHAR},#{operator},
+		#{processTime,jdbcType=TIMESTAMP},#{clientType},#{status})
+	</insert>
+	<insert id="insertSelective"
+		parameterType="com.ipeaksoft.moneyday.core.entity.UserLoginException">
+		insert into tb_user_login_exception
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="moblie != null">
+				moblie,
+			</if>
+			<if test="city != null">
+				city,
+			</if>
+			<if test="province != null">
+				province,
+			</if>
+			<if test="region != null">
+				region,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="appleId != null">
+				apple_id,
+			</if>
+			<if test="idfa != null">
+				idfa,
+			</if>
+			<if test="operator != null">
+				operator,
+			</if>
+			<if test="processTime != null">
+				process_time,
+			</if>
+			<if test="clientType != null">
+				client_type,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=BIGINT},
+			</if>
+			<if test="moblie != null">
+				#{moblie,jdbcType=VARCHAR},
+			</if>
+			<if test="city != null">
+				#{city,jdbcType=VARCHAR},
+			</if>
+			<if test="province != null">
+				#{province,jdbcType=VARCHAR},
+			</if>
+			<if test="region != null">
+				#{region,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="appleId != null">
+				#{appleId,jdbcType=VARCHAR},
+			</if>
+			<if test="idfa != null">
+				#{idfa,jdbcType=VARCHAR},
+			</if>
+			<if test="operator != null">
+				#{operator},
+			</if>
+			<if test="processTime != null">
+				#{processTime,jdbcType=VARCHAR},
+			</if>
+			<if test="clientType != null">
+				#{clientType,jdbcType=VARCHAR},
+			</if>
+
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective"
+		parameterType="com.ipeaksoft.moneyday.core.entity.UserLoginException">
+		update tb_user_login_exception
+		<set>
+			<if test="moblie != null">
+				moblie = #{moblie,jdbcType=VARCHAR},
+			</if>
+			<if test="city != null">
+				city = #{city,jdbcType=VARCHAR},
+			</if>
+			<if test="province != null">
+				province = #{province,jdbcType=VARCHAR},
+			</if>
+			<if test="region != null">
+				region = #{region,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="appleId != null">
+				apple_id = #{appleId,jdbcType=VARCHAR},
+			</if>
+			<if test="idfa != null">
+				idfa = #{idfa,jdbcType=VARCHAR},
+			</if>
+			<if test="operator != null">
+				operator = #{operator},
+			</if>
+			<if test="processTime != null">
+				process_time = #{processTime,jdbcType=VARCHAR},
+			</if>
+			<if test="clientType != null">
+				client_type = #{clientType,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+	<update id="updateByPrimaryKey"
+		parameterType="com.ipeaksoft.moneyday.core.entity.UserLoginException">
+		update tb_user_login_exception
+		set moblie =
+		#{moblie,jdbcType=VARCHAR},
+		city = #{city,jdbcType=VARCHAR},
+		province =
+		#{province,jdbcType=VARCHAR},
+		region = #{region,jdbcType=VARCHAR},
+		create_time = #{createTime,jdbcType=TIMESTAMP},
+		apple_id =
+		#{appleId,jdbcType=VARCHAR},
+		idfa = #{idfa,jdbcType=VARCHAR},
+		operator=#{operator,jdbcType=VARCHAR},
+		process_time=#{processTime},
+		client_type=#{clientType},
+		status=#{status}
+		where id =
+		#{id,jdbcType=BIGINT}
+	</update>
+	<select id="findPage" resultMap="BaseResultMap" parameterType="java.util.Map">
+		select
+		tb_user.id,
+		tb_user.username userName,
+		tb_user.mobile moblie,
+		tb_user.apple_account apple_Id,
+		(select
+		CONCAT(ifnull(tb_user_login_exception.province,''),ifnull(tb_user_login_exception.city,''),ifnull(tb_user_login_exception.region,'')
+		) from tb_user_login_exception where
+		tb_user_login_exception.moblie=tb_user.mobile order by create_time
+		desc limit 0,1
+		) address,
+		(select
+		count(1)
+		from
+		tb_user_login_exception
+		where
+		tb_user_login_exception.moblie = tb_user.mobile) exceptionnum,
+		(select max(create_time) from tb_user_login_exception where
+		moblie=tb_user.mobile) create_time
+		from
+		tb_user
+		where
+		status = 2
+
+		<if test="currentPage !=null and pageSize != null">
+     <![CDATA[  LIMIT #{currentPage,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER} ]]>
+		</if>
+	</select>
+	<select id="findPageCount" resultType="Integer" parameterType="java.util.Map">
+		select count(1) from tb_user where status=2
+	</select>
+</mapper>

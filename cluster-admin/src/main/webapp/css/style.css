@@ -1,0 +1,37 @@
+* { font-family:"lucida Grande",Verdana,"Microsoft YaHei"; font-size:14px; }
+a { cursor: pointer; }
+main { margin-top: 50px; }
+
+td { vertical-align: middle!important; }
+
+.line { *width: 100%; height: 2px; margin: 10px 0; font-size: 0; overflow: hidden; background-color: transparent; border-width: 0; border-top: 1px solid #e8e8e8; }
+.line-dashed { border-style: dashed; }
+
+.drop-box { background: #F8F8F8; border: 5px dashed #DDD; width: 200px; text-align: center; padding: 20px 0 20px 0; }
+.drop-box-over { background: #999; }
+
+.uploaded-list > li { margin: 5px; }
+.uploaded-list > li > a { position: relative; }
+.uploaded-list > li > a > img { display: none; }
+.uploaded-list > li > a:hover > img { z-index: 9999; display: block; background: #F8F8F8; max-width: 400px; max-height: 200px; position: absolute; top: 20px; left: 0; border: 1px solid #DDD; padding: 5px; border-radius: 5px; }
+
+.op-container { margin: 10px; }
+
+/*.table td, .table th { text-align: center; }*/
+
+.pic-select { overflow-y: auto; z-index: 9999; width: 740px; height: 500px; position: fixed; top: 50px; left: 50%; margin-left: -400px; background: #FFF; border: 1px solid #CCC; }
+
+/*#table td, #app-table th { padding-left: 0; padding-right: 0; }
+#table td > div { text-align: center; }
+#table td > div > .text { line-height: 30px; }
+#table td > div:first-child { padding-bottom: 8px; border-bottom: 1px solid #DDD; }
+#table td > div:last-child { padding-top: 8px; }*/
+
+/**pagging toolbar*/ 
+.pagination{padding-top:0px; margin:0px;}
+
+/**padding*/
+.padding-0{padding:0px;}
+.padding-10{padding:10px;}
+.margin-bottomm-10{margin-bottom:10px;}
+.margin-top-10{margin-top:10px;}

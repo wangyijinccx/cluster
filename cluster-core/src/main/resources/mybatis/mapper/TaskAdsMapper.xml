@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ipeaksoft.moneyday.core.mapper.TaskAdsMapper" >
+  <resultMap id="BaseResultMap" type="com.ipeaksoft.moneyday.core.entity.TaskAds" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="image" property="image" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="request_url" property="requestUrl" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="operator" property="operator" jdbcType="INTEGER" />
+    <result column="priority" property="priority" jdbcType="TINYINT" />
+    <result column="numorder" property="numorder" jdbcType="SMALLINT" />
+    <result column="enable" property="enable" jdbcType="VARCHAR" />
+    <result column="username" property="userName" jdbcType="VARCHAR" />
+    <result column="mobile" property="mobile" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    tb_task_ads.id, tb_task_ads.name, image, description, request_url, tb_task_ads.create_time, operator, priority, numorder, enable
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_task_ads
+    where id = #{id}
+  </select>
+
+  <select id="listAll" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_task_ads
+    where enable = 'Y'
+    order by numorder
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from tb_task_ads
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.ipeaksoft.moneyday.core.entity.TaskAds" >
+    insert into tb_task_ads (id, name, image, description, request_url, 
+      create_time, operator, priority, 
+      numorder)
+    values (#{id}, #{name}, #{image}, #{description}, #{requestUrl}, 
+      #{createTime}, #{operator}, #{priority}, 
+      #{numorder,jdbcType=SMALLINT})
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.ipeaksoft.moneyday.core.entity.TaskAds" >
+    update tb_task_ads
+    <set >
+      <if test="name != null" >
+        name = #{name},
+      </if>
+      <if test="image != null" >
+        image = #{image},
+      </if>
+      <if test="description != null" >
+        description = #{description},
+      </if>
+      <if test="requestUrl != null" >
+        request_url = #{requestUrl},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="operator != null" >
+        operator = #{operator},
+      </if>
+      <if test="priority != null" >
+        priority = #{priority},
+      </if>
+      <if test="numorder != null" >
+        numorder = #{numorder,jdbcType=SMALLINT},
+      </if>
+       <if test="enable != null" >
+        enable = #{enable,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ipeaksoft.moneyday.core.entity.TaskAds" >
+    update tb_task_ads
+    set name = #{name},
+      image = #{image},
+      description = #{description},
+      request_url = #{requestUrl},
+      create_time = #{createTime},
+      operator = #{operator},
+      priority = #{priority},
+      numorder = #{numorder,jdbcType=SMALLINT},
+      enable = #{enable}
+    where id = #{id}
+  </update>
+  <select id="selectByWhere" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />,tb_admin_user.username username,tb_admin_user.phone mobile
+    from tb_task_ads left join tb_admin_user on tb_task_ads.operator=tb_admin_user.id
+    where 1=1 
+    <if test="keys!=null and keys!=''">
+    	<![CDATA[ and name like  CONCAT('%','${keys}','%' ) ]]>
+    </if>
+    
+    order by
+    <if test="ordeStr!=null">
+    ${ordeStr}
+    </if>
+     enable desc, numorder asc,create_time desc
+    <if test="currentPage !=null and pageSize != null">
+	  <![CDATA[  LIMIT #{currentPage,jdbcType=INTEGER},#{pageSize,jdbcType=INTEGER} ]]>
+	</if>
+    
+  </select>
+  <select id="selectByWhereCount" resultType="Integer" >
+    select 
+    count(1)
+    from tb_task_ads
+    where 1=1 
+    <if test="keys!=null and keys!=''">
+    	<![CDATA[ and name like  CONCAT('%','${keys}','%' ) ]]>
+    </if>
+    order by numorder
+  </select>
+</mapper>

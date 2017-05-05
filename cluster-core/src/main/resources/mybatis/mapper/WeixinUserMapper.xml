@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ipeaksoft.moneyday.core.mapper.WeixinUserMapper" >
+  <resultMap id="BaseResultMap" type="com.ipeaksoft.moneyday.core.entity.WeixinUser" >
+    <id column="id" property="id" />
+    <result column="openid" property="openid" />
+    <result column="nickname" property="nickname" />
+    <result column="sex" property="sex" />
+    <result column="language" property="language" />
+    <result column="city" property="city" />
+    <result column="province" property="province" />
+    <result column="country" property="country" />
+    <result column="headimgurl" property="headimgurl" />
+    <result column="privilege" property="privilege" />
+    <result column="create_time" property="createTime" />
+    <result column="update_time" property="updateTime" />
+    <result column="enable" property="enable" />
+    <result column="idfa" property="idfa" />
+    <result column="userid" property="userid" />
+    <result column="mobile" property="mobile" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, openid, nickname, sex, language, city, province, country, headimgurl, privilege, 
+    create_time, update_time, enable, idfa, userid, mobile
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_weixin_user
+    where id = #{id}
+  </select>
+  
+  <select id="selectByOpenid" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_weixin_user
+    where openid = #{openid,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectByMobile" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from tb_weixin_user
+    where mobile = #{mobile,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from tb_weixin_user
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.ipeaksoft.moneyday.core.entity.WeixinUser" >
+    <selectKey keyProperty="id" resultType="String" order="BEFORE">
+        select UPPER (UUID())
+    </selectKey>
+    insert into tb_weixin_user (id, openid, nickname, 
+      sex, language, city, 
+      province, country, headimgurl, 
+      privilege, create_time, update_time, 
+      enable, idfa, userid, mobile
+      )
+    values (#{id}, #{openid}, #{nickname}, 
+      #{sex}, #{language}, #{city}, 
+      #{province}, #{country}, #{headimgurl}, 
+      #{privilege}, #{createTime}, #{updateTime}, 
+      #{enable}, #{idfa}, #{userid}, #{mobile}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ipeaksoft.moneyday.core.entity.WeixinUser" >
+    insert into tb_weixin_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="openid != null" >
+        openid,
+      </if>
+      <if test="nickname != null" >
+        nickname,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="language != null" >
+        language,
+      </if>
+      <if test="city != null" >
+        city,
+      </if>
+      <if test="province != null" >
+        province,
+      </if>
+      <if test="country != null" >
+        country,
+      </if>
+      <if test="headimgurl != null" >
+        headimgurl,
+      </if>
+      <if test="privilege != null" >
+        privilege,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="enable != null" >
+        enable,
+      </if>
+      <if test="idfa != null" >
+        idfa,
+      </if>
+      <if test="userid != null" >
+        userid,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="openid != null" >
+        #{openid},
+      </if>
+      <if test="nickname != null" >
+        #{nickname},
+      </if>
+      <if test="sex != null" >
+        #{sex},
+      </if>
+      <if test="language != null" >
+        #{language},
+      </if>
+      <if test="city != null" >
+        #{city},
+      </if>
+      <if test="province != null" >
+        #{province},
+      </if>
+      <if test="country != null" >
+        #{country},
+      </if>
+      <if test="headimgurl != null" >
+        #{headimgurl},
+      </if>
+      <if test="privilege != null" >
+        #{privilege},
+      </if>
+      <if test="createTime != null" >
+        #{createTime},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime},
+      </if>
+      <if test="enable != null" >
+        #{enable},
+      </if>
+      <if test="idfa != null" >
+        #{idfa},
+      </if>
+      <if test="userid != null" >
+        #{userid},
+      </if>
+      <if test="mobile != null" >
+        #{mobile},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ipeaksoft.moneyday.core.entity.WeixinUser" >
+    update tb_weixin_user
+    <set >
+      <if test="openid != null" >
+        openid = #{openid},
+      </if>
+      <if test="nickname != null" >
+        nickname = #{nickname},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex},
+      </if>
+      <if test="language != null" >
+        language = #{language},
+      </if>
+      <if test="city != null" >
+        city = #{city},
+      </if>
+      <if test="province != null" >
+        province = #{province},
+      </if>
+      <if test="country != null" >
+        country = #{country},
+      </if>
+      <if test="headimgurl != null" >
+        headimgurl = #{headimgurl},
+      </if>
+      <if test="privilege != null" >
+        privilege = #{privilege},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime},
+      </if>
+      <if test="enable != null" >
+        enable = #{enable},
+      </if>
+      <if test="idfa != null" >
+        idfa = #{idfa},
+      </if>
+      <if test="userid != null" >
+        userid = #{userid},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  
+  <update id="updateByOpenid" parameterType="com.ipeaksoft.moneyday.core.entity.WeixinUser" >
+    update tb_weixin_user
+    <set >
+      <if test="nickname != null" >
+        nickname = #{nickname},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex},
+      </if>
+      <if test="language != null" >
+        language = #{language},
+      </if>
+      <if test="city != null" >
+        city = #{city},
+      </if>
+      <if test="province != null" >
+        province = #{province},
+      </if>
+      <if test="country != null" >
+        country = #{country},
+      </if>
+      <if test="headimgurl != null" >
+        headimgurl = #{headimgurl},
+      </if>
+      <if test="privilege != null" >
+        privilege = #{privilege},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime},
+      </if>
+      <if test="enable != null" >
+        enable = #{enable},
+      </if>
+      <if test="idfa != null" >
+        idfa = #{idfa},
+      </if>
+      <if test="userid != null" >
+        userid = #{userid},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile},
+      </if>
+    </set>
+    where openid = #{openid}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ipeaksoft.moneyday.core.entity.WeixinUser" >
+    update tb_weixin_user
+    set openid = #{openid},
+      nickname = #{nickname},
+      sex = #{sex},
+      language = #{language},
+      city = #{city},
+      province = #{province},
+      country = #{country},
+      headimgurl = #{headimgurl},
+      privilege = #{privilege},
+      create_time = #{createTime},
+      update_time = #{updateTime},
+      enable = #{enable},
+      idfa = #{idfa},
+      userid = #{userid},
+      mobile = #{mobile}
+    where id = #{id}
+  </update>
+</mapper>
